@@ -5,7 +5,7 @@ function App() {
     <div className="App">
       <header className="header">
         <h1>Welcome to Playmaker</h1>
-        <p className="subtitle">The best way to follow your favorite sports team</p>
+        <p className="subtitle">The best way to follow your favorite sports team!</p>
       </header>
       <div className="images-container">
         <img src="/nba-logo.png" alt="NBA Logo" className="logo-image" />
