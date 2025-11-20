@@ -1,18 +1,14 @@
-import './App.css'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Landing from './pages/Landing';
 
 function App() {
   return (
-    <div className="App">
-      <header className="header">
-        <h1>Welcome to Playmaker</h1>
-        <p className="subtitle">The best way to follow your favorite sports team</p>
-      </header>
-      <div className="images-container">
-        <img src="/nba-logo.png" alt="NBA Logo" className="logo-image" />
-        <img src="/nfl-logo.png" alt="NFL Logo" className="logo-image" />
-      </div>
-    </div>
-  )
+    <Router>
+      <Routes>
+        <Route path="/" element={<Landing />} />
+      </Routes>
+    </Router>
+  );
 }
 
-export default App
+export default App;
