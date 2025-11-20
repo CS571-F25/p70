@@ -31,11 +31,11 @@ function Landing() {
         <div className="navbar-container">
           <span className="brand-wordmark">PlayMaker</span>
           <ul className="navbar-links">
-            <li><a href="#" className="nav-link">Overview</a></li>
-            <li><a href="#" className="nav-link">Dashboard</a></li>
-            <li><a href="#" className="nav-link">Predictions</a></li>
-            <li><a href="#" className="nav-link">Rating</a></li>
-            <li><a href="#" className="nav-link">Profile</a></li>
+            <li><a href="#" className="nav-link" onClick={(e) => e.preventDefault()}>Overview</a></li>
+            <li><a href="#" className="nav-link" onClick={(e) => e.preventDefault()}>Dashboard</a></li>
+            <li><a href="#" className="nav-link" onClick={(e) => e.preventDefault()}>Predictions</a></li>
+            <li><a href="#" className="nav-link" onClick={(e) => e.preventDefault()}>Rating</a></li>
+            <li><a href="#" className="nav-link" onClick={(e) => e.preventDefault()}>Profile</a></li>
           </ul>
         </div>
       </nav>
@@ -66,9 +66,9 @@ function Landing() {
       {/* Footer */}
       <footer className="footer">
         <div className="footer-content">
-          <a href="#" className="footer-link">Privacy</a>
-          <a href="#" className="footer-link">Terms</a>
-          <a href="#" className="footer-link">About</a>
+          <a href="#" className="footer-link" onClick={(e) => e.preventDefault()}>Privacy</a>
+          <a href="#" className="footer-link" onClick={(e) => e.preventDefault()}>Terms</a>
+          <a href="#" className="footer-link" onClick={(e) => e.preventDefault()}>About</a>
         </div>
       </footer>
     </div>
