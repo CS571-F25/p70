@@ -1,6 +1,9 @@
 import '../Landing.css';
+import { useNavigate } from 'react-router-dom';
 
 function Landing() {
+  const navigate = useNavigate();
+
   const features = [
     {
       title: 'Overview',
@@ -31,11 +34,11 @@ function Landing() {
         <div className="navbar-container">
           <span className="brand-wordmark">PlayMaker</span>
           <ul className="navbar-links">
-            <li><a href="#" className="nav-link" onClick={(e) => e.preventDefault()}>Overview</a></li>
-            <li><a href="#" className="nav-link" onClick={(e) => e.preventDefault()}>Dashboard</a></li>
-            <li><a href="#" className="nav-link" onClick={(e) => e.preventDefault()}>Predictions</a></li>
-            <li><a href="#" className="nav-link" onClick={(e) => e.preventDefault()}>Rating</a></li>
-            <li><a href="#" className="nav-link" onClick={(e) => e.preventDefault()}>Profile</a></li>
+            <li><a href="#" className="nav-link" onClick={(e) => { e.preventDefault(); navigate('/overview'); }}>Overview</a></li>
+            <li><a href="#" className="nav-link" onClick={(e) => { e.preventDefault(); navigate('/dashboard'); }}>Dashboard</a></li>
+            <li><a href="#" className="nav-link" onClick={(e) => { e.preventDefault(); navigate('/predictions'); }}>Predictions</a></li>
+            <li><a href="#" className="nav-link" onClick={(e) => { e.preventDefault(); navigate('/rating'); }}>Rating</a></li>
+            <li><a href="#" className="nav-link" onClick={(e) => { e.preventDefault(); navigate('/profile'); }}>Profile</a></li>
           </ul>
         </div>
       </nav>
@@ -55,7 +58,12 @@ function Landing() {
       <section className="features-section">
         <div className="features-grid">
           {features.map((feature, index) => (
-            <div key={index} className="feature-card">
+            <div 
+              key={index} 
+              className="feature-card"
+              onClick={() => navigate(`/${feature.title.toLowerCase().replace(' ', '-')}`)}
+              style={{ cursor: 'pointer' }}
+            >
               <h3 className="feature-title">{feature.title}</h3>
               <p className="feature-description">{feature.description}</p>
             </div>
