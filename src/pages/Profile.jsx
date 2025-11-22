@@ -1,26 +1,8 @@
-import { useNavigate } from 'react-router-dom';
-
 function Profile() {
-  const navigate = useNavigate();
-
   return (
-    <div style={{ padding: '40px', textAlign: 'center' }}>
+    <div style={{ padding: '100px 40px 40px', textAlign: 'center', minHeight: '100vh', background: '#0A1128', color: '#FFFFFF' }}>
       <h1>Profile</h1>
-      <button 
-        onClick={() => navigate('/')}
-        style={{
-          marginTop: '20px',
-          padding: '10px 20px',
-          fontSize: '16px',
-          cursor: 'pointer',
-          backgroundColor: '#007bff',
-          color: 'white',
-          border: 'none',
-          borderRadius: '5px'
-        }}
-      >
-        Back to Home
-      </button>
+      <p style={{ marginTop: '20px', color: 'rgba(255, 255, 255, 0.7)' }}>Content coming soon...</p>
     </div>
   );
 }

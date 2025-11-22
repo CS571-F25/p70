@@ -1,0 +1,426 @@
+/* Dashboard Page Styles - PlayMaker Design System */
+
+.dashboard-page {
+  min-height: 100vh;
+  background: #0A1128; /* Midnight Navy */
+  color: #FFFFFF;
+  font-family: 'Inter', sans-serif;
+  padding-top: 80px; /* Account for navbar if fixed */
+}
+
+/* ===== USER STATS HEADER ===== */
+.stats-header {
+  background: linear-gradient(135deg, #111827 0%, #1a2332 100%); /* Graphite Black gradient */
+  border-bottom: 2px solid rgba(139, 92, 246, 0.4); /* Purple accent */
+  padding: 3rem 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.stats-header::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -10%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.12) 0%, rgba(59, 130, 246, 0.08) 50%, transparent 70%);
+  border-radius: 50%;
+  animation: pulse 4s ease-in-out infinite;
+}
+
+.stats-header-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+/* ELO Display - Prominent Center */
+.elo-display {
+  text-align: center;
+  margin-bottom: 3rem;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.elo-label {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.5rem;
+}
+
+.elo-value {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 5rem;
+  font-weight: 700;
+  color: #A78BFA; /* Violet */
+  text-shadow: 
+    0 0 40px rgba(167, 139, 250, 0.6),
+    0 0 80px rgba(139, 92, 246, 0.4);
+  line-height: 1;
+  margin-bottom: 0.5rem;
+  animation: glow 3s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+  from {
+    text-shadow: 
+      0 0 40px rgba(167, 139, 250, 0.6),
+      0 0 80px rgba(139, 92, 246, 0.4);
+  }
+  to {
+    text-shadow: 
+      0 0 50px rgba(167, 139, 250, 0.8),
+      0 0 100px rgba(139, 92, 246, 0.6),
+      0 0 120px rgba(124, 58, 237, 0.4);
+  }
+}
+
+.elo-change {
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #A3FF12; /* Neon Lime */
+  text-shadow: 0 0 10px rgba(163, 255, 18, 0.5);
+}
+
+/* Stats Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  animation: fadeInUp 0.8s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Stat Cards */
+.stat-card {
+  background: rgba(17, 24, 39, 0.6); /* Graphite Black with transparency */
+  border: 1px solid rgba(139, 92, 246, 0.3); /* Purple outline */
+  border-radius: 16px;
+  padding: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  border-color: #A3FF12; /* Neon Lime */
+  box-shadow: 
+    0 0 30px rgba(163, 255, 18, 0.3),
+    0 10px 40px rgba(0, 0, 0, 0.4);
+}
+
+.stat-card:hover::before {
+  opacity: 1;
+}
+
+.stat-icon {
+  font-size: 3rem;
+  filter: drop-shadow(0 0 10px rgba(251, 146, 60, 0.5)); /* Orange glow */
+  position: relative;
+  z-index: 1;
+}
+
+.stat-content {
+  flex: 1;
+  position: relative;
+  z-index: 1;
+}
+
+.stat-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+
+.stat-value {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  line-height: 1.2;
+  margin-bottom: 0.25rem;
+}
+
+.stat-value.streak-win {
+  color: #A3FF12; /* Neon Lime */
+  text-shadow: 0 0 15px rgba(163, 255, 18, 0.6);
+}
+
+.stat-value.streak-loss {
+  color: #FF006E; /* Red/Pink for losses */
+  text-shadow: 0 0 15px rgba(255, 0, 110, 0.6);
+}
+
+.stat-subtext {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Rank Card Special Styling */
+.rank-card {
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.rank-badge {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  border: 2px solid;
+  border-radius: 12px;
+  padding: 1rem 2rem;
+  background: rgba(0, 0, 0, 0.3);
+  position: relative;
+  z-index: 1;
+}
+
+.rank-icon {
+  font-size: 3rem;
+  filter: drop-shadow(0 0 15px currentColor);
+}
+
+.rank-content {
+  text-align: left;
+}
+
+.rank-name {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  line-height: 1;
+  margin-bottom: 0.25rem;
+  filter: drop-shadow(0 0 10px currentColor);
+}
+
+.rank-tier {
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* ===== DASHBOARD CONTENT LAYOUT ===== */
+.dashboard-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Dashboard Grid - Two Column Layout for Active Picks and Quick Actions */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+/* Dashboard Sections */
+.dashboard-section {
+  background: rgba(17, 24, 39, 0.6); /* Graphite Black with transparency */
+  border: 1px solid rgba(107, 114, 128, 0.3); /* Neutral slate outline */
+  border-radius: 16px;
+  padding: 2rem;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.dashboard-section:hover {
+  border-color: rgba(139, 92, 246, 0.5); /* Purple on hover */
+  box-shadow: 0 5px 20px rgba(139, 92, 246, 0.15);
+}
+
+/* Section Headers */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(107, 114, 128, 0.3);
+}
+
+.section-title {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #F59E0B; /* Amber/Orange */
+  margin: 0;
+  text-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
+}
+
+.section-badge {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #FFFFFF;
+  background: rgba(139, 92, 246, 0.3); /* Purple badge */
+  border: 1px solid rgba(139, 92, 246, 0.5);
+  border-radius: 20px;
+  padding: 0.375rem 0.875rem;
+}
+
+/* Full Width Sections */
+.friends-section,
+.recent-results-section {
+  grid-column: 1 / -1;
+  margin-bottom: 2rem;
+}
+
+/* Placeholder Boxes */
+.section-placeholder-box {
+  text-align: center;
+  padding: 3rem 2rem;
+  color: rgba(255, 255, 255, 0.5);
+  background: rgba(10, 17, 40, 0.4);
+  border-radius: 12px;
+  border: 1px dashed rgba(107, 114, 128, 0.3);
+}
+
+.section-placeholder-box p {
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.nav-button {
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 0.75rem 2rem;
+  background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+  color: #FFFFFF;
+  border: 1px solid rgba(59, 130, 246, 0.5);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+}
+
+.nav-button:hover {
+  background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
+  box-shadow: 
+    0 0 30px rgba(59, 130, 246, 0.5),
+    0 5px 20px rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
+}
+
+/* Responsive Design */
+@media (max-width: 968px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .elo-value {
+    font-size: 4rem;
+  }
+
+  .stats-header {
+    padding: 2rem 1.5rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .dashboard-page {
+    padding-top: 60px;
+  }
+
+  .stats-header {
+    padding: 2rem 1rem;
+  }
+
+  .elo-value {
+    font-size: 3.5rem;
+  }
+
+  .elo-label {
+    font-size: 1rem;
+  }
+
+  .stat-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 1.5rem;
+    gap: 1rem;
+  }
+
+  .rank-badge {
+    flex-direction: column;
+    text-align: center;
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  .rank-content {
+    text-align: center;
+  }
+
+  .stat-value {
+    font-size: 1.5rem;
+  }
+
+  .rank-name {
+    font-size: 1.5rem;
+  }
+
+  .dashboard-content {
+    padding: 1.5rem 1rem;
+  }
+
+  .dashboard-section {
+    padding: 1.5rem;
+  }
+
+  .section-title {
+    font-size: 1.5rem;
+  }
+
+  .section-placeholder-box {
+    padding: 2rem 1rem;
+  }
+}

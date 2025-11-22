@@ -62,7 +62,6 @@ function Landing() {
               key={index} 
               className="feature-card"
               onClick={() => navigate(`/${feature.title.toLowerCase().replace(' ', '-')}`)}
-              style={{ cursor: 'pointer' }}
             >
               <h3 className="feature-title">{feature.title}</h3>
               <p className="feature-description">{feature.description}</p>

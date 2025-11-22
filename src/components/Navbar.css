@@ -1,0 +1,99 @@
+/* Navbar Styles - PlayMaker Design System */
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: rgba(17, 24, 39, 0.95); /* Graphite Black with transparency */
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(59, 130, 246, 0.2); /* Electric Blue subtle border */
+  padding: 1rem 0;
+}
+
+.navbar-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.brand-wordmark {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #3B82F6; /* Electric Blue */
+  letter-spacing: -0.02em;
+  text-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.brand-wordmark:hover {
+  color: #A3FF12; /* Neon Lime */
+  text-shadow: 0 0 25px rgba(163, 255, 18, 0.6);
+}
+
+.navbar-links {
+  display: flex;
+  list-style: none;
+  gap: 2rem;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-link {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #FFFFFF;
+  text-decoration: none;
+  position: relative;
+  padding: 0.5rem 0;
+  transition: all 0.3s ease;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: #A3FF12; /* Neon Lime */
+  box-shadow: 0 0 10px rgba(163, 255, 18, 0.8);
+  transition: width 0.3s ease;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: #A3FF12; /* Neon Lime */
+  text-shadow: 0 0 10px rgba(163, 255, 18, 0.6);
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+  width: 100%;
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+  .navbar-container {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
+  
+  .navbar-links {
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .nav-link {
+    font-size: 0.85rem;
+  }
+}
