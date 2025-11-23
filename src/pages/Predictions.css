@@ -1,0 +1,371 @@
+/* Predictions Page Styles - PlayMaker Design System */
+
+.predictions-page {
+  min-height: 100vh;
+  background: #0A1128; /* Midnight Navy */
+  color: #FFFFFF;
+  font-family: 'Inter', sans-serif;
+  padding: 100px 2rem 40px;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Page Header */
+.predictions-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-title {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 3rem;
+  font-weight: 700;
+  color: #A78BFA; /* Purple */
+  margin: 0 0 1rem 0;
+  text-shadow: 0 0 30px rgba(167, 139, 250, 0.5);
+  animation: glow 3s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+  from {
+    text-shadow: 0 0 30px rgba(167, 139, 250, 0.5);
+  }
+  to {
+    text-shadow: 0 0 40px rgba(167, 139, 250, 0.7), 0 0 60px rgba(167, 139, 250, 0.5);
+  }
+}
+
+.games-count {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.1rem;
+  color: #F59E0B; /* Orange */
+  font-weight: 500;
+}
+
+/* Loading State */
+.loading-container,
+.error-container,
+.no-games-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  text-align: center;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.loading-spinner {
+  width: 60px;
+  height: 60px;
+  border: 4px solid rgba(167, 139, 250, 0.2);
+  border-top-color: #A78BFA;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1.5rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-container h2 {
+  font-family: 'Rajdhani', sans-serif;
+  color: #A78BFA;
+  font-size: 1.5rem;
+}
+
+.error-container h1,
+.no-games-container h1 {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 2rem;
+  color: #A78BFA;
+  margin-bottom: 1rem;
+}
+
+.error-message {
+  color: #FF006E;
+  margin-bottom: 1.5rem;
+}
+
+.retry-btn {
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 0.75rem 2rem;
+  background: linear-gradient(135deg, #A78BFA 0%, #8B5CF6 100%);
+  color: #FFFFFF;
+  border: 1px solid rgba(167, 139, 250, 0.5);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 20px rgba(167, 139, 250, 0.3);
+}
+
+.retry-btn:hover {
+  background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
+  box-shadow: 0 0 30px rgba(167, 139, 250, 0.5), 0 5px 20px rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
+}
+
+/* Games Container */
+.games-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+  gap: 2rem;
+  animation: fadeInUp 0.8s ease-out;
+}
+
+/* Game Cards */
+.game-card {
+  background: linear-gradient(135deg, rgba(26, 35, 58, 0.9) 0%, rgba(31, 41, 65, 0.9) 100%);
+  border: 1px solid rgba(167, 139, 250, 0.3);
+  border-radius: 16px;
+  padding: 2rem;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.game-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(167, 139, 250, 0.1) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.game-card:hover {
+  transform: translateY(-5px);
+  border-color: #A78BFA;
+  box-shadow: 0 0 30px rgba(167, 139, 250, 0.3), 0 10px 40px rgba(0, 0, 0, 0.4);
+}
+
+.game-card:hover::before {
+  opacity: 1;
+}
+
+/* Game Header */
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(167, 139, 250, 0.2);
+  position: relative;
+  z-index: 1;
+}
+
+.game-time {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.date {
+  font-family: 'Rajdhani', sans-serif;
+  color: #F59E0B; /* Orange */
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.time {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+}
+
+.today-badge {
+  background: #A3FF12; /* Neon Lime */
+  color: #0A1128;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  margin-top: 0.25rem;
+  display: inline-block;
+  box-shadow: 0 0 10px rgba(163, 255, 18, 0.5);
+}
+
+.bookmaker-badge {
+  background: rgba(167, 139, 250, 0.2);
+  color: #A78BFA;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: 1px solid rgba(167, 139, 250, 0.3);
+}
+
+/* Teams Section */
+.teams-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  gap: 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+.team {
+  flex: 1;
+  text-align: center;
+}
+
+.team-name {
+  display: block;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin-bottom: 0.25rem;
+}
+
+.team-label {
+  display: block;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.vs-divider {
+  font-size: 1.5rem;
+  color: #F59E0B;
+  font-weight: 700;
+  font-family: 'Rajdhani', sans-serif;
+}
+
+/* Markets Section */
+.markets-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.market-box {
+  background: rgba(15, 23, 42, 0.5);
+  border-radius: 12px;
+  padding: 1.25rem;
+  border: 1px solid rgba(107, 114, 128, 0.2);
+}
+
+.market-title {
+  font-family: 'Rajdhani', sans-serif;
+  color: #F59E0B; /* Orange */
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.odds-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.odds-btn {
+  background: rgba(167, 139, 250, 0.15);
+  border: 1px solid rgba(167, 139, 250, 0.35);
+  border-radius: 8px;
+  padding: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  text-align: left;
+}
+
+.odds-btn:hover {
+  background: rgba(167, 139, 250, 0.25);
+  border-color: #A78BFA;
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(167, 139, 250, 0.3);
+}
+
+.odds-team {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 500;
+}
+
+.odds-value {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1.1rem;
+  color: #A3FF12; /* Neon Lime */
+  font-weight: 700;
+  text-shadow: 0 0 10px rgba(163, 255, 18, 0.5);
+}
+
+/* Responsive Design */
+@media (max-width: 968px) {
+  .games-container {
+    grid-template-columns: 1fr;
+  }
+  
+  .page-title {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .predictions-page {
+    padding: 80px 1rem 40px;
+  }
+
+  .page-title {
+    font-size: 2rem;
+  }
+
+  .games-container {
+    gap: 1.5rem;
+  }
+
+  .game-card {
+    padding: 1.5rem;
+  }
+
+  .teams-section {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .vs-divider {
+    transform: rotate(90deg);
+  }
+
+  .game-header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .odds-grid {
+    grid-template-columns: 1fr;
+  }
+}

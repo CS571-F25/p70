@@ -1,0 +1,222 @@
+THE ODDS API – REST API DOCUMENTATION (V4)
+==========================================
+
+1. OVERVIEW
+-----------
+The Odds API provides real-time and historical sports betting odds and scores.
+
+Basic workflow:
+1. Get an API key.
+2. Retrieve in-season sports via GET /v4/sports.
+3. Retrieve odds or scores using the sport key.
+
+All authentication is done using the apiKey query parameter.
+
+Host:
+https://api.the-odds-api.com
+(IPv6 alternative: https://ipv6-api.the-odds-api.com)
+
+
+2. COMMON CONCEPTS
+------------------
+
+Regions:
+Determines which bookmakers appear in responses.
+Examples: us, us2, uk, au, eu
+Multiple regions: comma-separated (e.g., us,uk,eu)
+
+Markets:
+Determines which betting markets to return.
+Common markets:
+h2h (moneyline)
+h2h_lay (exchange lay odds)
+spreads
+totals
+outrights
+Various player prop and special markets for event-level endpoints
+
+Date formats:
+dateFormat = iso (default) or unix
+
+Odds formats:
+oddsFormat = decimal (default) or american
+
+Response headers used for quota tracking:
+x-requests-remaining
+x-requests-used
+x-requests-last
+
+
+3. QUOTA COST SUMMARY
+---------------------
+
+/sports .................................. cost 0
+/events .................................. cost 0
+/odds .................................... cost = (#markets) x (#regions)
+/scores .................................. cost = 2 if daysFrom set, otherwise 1
+/event odds .............................. cost = (#unique markets returned) x (#regions)
+/event markets ........................... cost = 1
+/participants ............................ cost = 1
+/historical odds ......................... cost = 10 x (#markets) x (#regions)
+/historical events ....................... cost = 1 (0 if empty)
+/historical event odds ................... cost = 10 x (#unique markets returned) x (#regions)
+
+
+4. ENDPOINTS
+------------
+
+
+==========================================
+4.1 GET /v4/sports
+==========================================
+
+Description:
+Returns a list of in-season sports. Does not count against quota.
+
+Endpoint:
+GET /v4/sports?apiKey={apiKey}&all={all}
+
+Parameters:
+apiKey (required)
+all (optional, true returns in- and out-of-season)
+
+Example:
+GET https://api.the-odds-api.com/v4/sports?apiKey=YOUR_API_KEY
+
+Response: Array of sport objects (key, group, title, description, active)
+
+Quota Cost: 0
+
+
+
+==========================================
+4.2 GET /v4/sports/{sport}/odds
+==========================================
+
+Description:
+Returns upcoming and live games with odds for specified regions and markets.
+
+Endpoint:
+GET /v4/sports/{sport}/odds?apiKey=...&regions=...&markets=...
+
+Important Parameters:
+sport (required)
+regions (required) – comma-separated list of regions
+markets (optional) – defaults to h2h
+oddsFormat (optional) – decimal or american
+dateFormat (optional) – iso or unix
+eventIds (optional)
+bookmakers (optional, overrides regions)
+commenceTimeFrom, commenceTimeTo (optional filters)
+includeLinks (optional)
+includeSids (optional)
+includeBetLimits (optional)
+includeRotationNumbers (optional)
+
+Example:
+GET /v4/sports/americanfootball_nfl/odds?apiKey=KEY&regions=us&markets=h2h,spreads
+
+Response:
+Array of events, each containing bookmakers and market data.
+
+Quota Cost:
+(#markets specified) x (#regions specified)
+
+Examples:
+1 market, 1 region -> cost 1
+3 markets, 1 region -> cost 3
+1 market, 3 regions -> cost 3
+3 markets, 3 regions -> cost 9
+
+If no events are returned, cost = 0.
+
+
+
+==========================================
+4.3 GET /v4/sports/{sport}/scores
+==========================================
+
+Description:
+Returns upcoming, live, and recently completed games with scores.
+Live scores refresh ~30 seconds.
+
+Endpoint:
+GET /v4/sports/{sport}/scores?apiKey=...&daysFrom=...
+
+Parameters:
+daysFrom (1–3 optional)
+dateFormat (optional)
+eventIds (optional)
+
+Example:
+GET /v4/sports/basketball_nba/scores?daysFrom=1&apiKey=KEY
+
+Quota Cost:
+2 if daysFrom is provided
+1 otherwise
+
+
+
+==========================================
+4.4 GET /v4/sports/{sport}/events
+==========================================
+
+Description:
+Returns a list of in-play and pre-match events for a sport.
+Does not include odds. Costs 0.
+
+Endpoint:
+GET /v4/sports/{sport}/events?apiKey=...
+
+Parameters:
+dateFormat, eventIds, commenceTimeFrom, commenceTimeTo, includeRotationNumbers
+
+Quota Cost: 0
+
+
+
+==========================================
+4.5 GET /v4/sports/{sport}/events/{eventId}/odds
+==========================================
+
+Description:
+Returns odds for a single event for any supported market.
+
+Parameters (in addition to /odds parameters):
+eventId (required)
+includeMultipliers (optional)
+
+Example:
+GET /v4/sports/americanfootball_nfl/events/{eventId}/odds?markets=player_pass_tds&regions=us
+
+Quota Cost:
+(#unique markets returned) x (#regions specified)
+
+Example:
+1 market, 1 region -> cost 1
+3 markets, 1 region -> cost 3
+
+
+
+==========================================
+4.6 GET /v4/sports/{sport}/events/{eventId}/markets
+==========================================
+
+Description:
+Returns recently observed market keys for each bookmaker for a single event.
+
+Endpoint:
+GET /v4/sports/{sport}/events/{eventId}/markets?apiKey=...
+
+Parameters:
+regions (required)
+bookmakers (optional)
+dateFormat (optional)
+
+Quota Cost: 1
+
+
+
+==========================================
+4.7 GET /v4/sports/{sport}/participants
+==================
