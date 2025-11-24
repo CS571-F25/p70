@@ -322,6 +322,455 @@
   margin: 0;
 }
 
+/* ===== ACTIVE PREDICTIONS CARDS ===== */
+
+/* Filter Tabs */
+.filter-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(167, 139, 250, 0.2);
+  padding-bottom: 0.5rem;
+}
+
+.filter-tab {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.6);
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.filter-tab:hover {
+  color: #A78BFA;
+}
+
+.filter-tab.active {
+  color: #A78BFA;
+  border-bottom-color: #A78BFA;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 3rem 2rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.empty-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  filter: grayscale(0.5) opacity(0.6);
+}
+
+.empty-state h3 {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1.5rem;
+  color: #A78BFA;
+  margin-bottom: 0.5rem;
+}
+
+.empty-state p {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 1.5rem;
+}
+
+/* Predictions Grid */
+.predictions-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* Prediction Card */
+.prediction-card {
+  background: linear-gradient(135deg, rgba(26, 35, 58, 0.9) 0%, rgba(31, 41, 65, 0.9) 100%);
+  border: 1px solid rgba(167, 139, 250, 0.3);
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  align-items: center;
+  gap: 1rem;
+}
+
+.prediction-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(167, 139, 250, 0.1) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.prediction-card:hover {
+  transform: translateY(-3px);
+  border-color: #A78BFA;
+  box-shadow: 0 0 20px rgba(167, 139, 250, 0.3), 0 5px 25px rgba(0, 0, 0, 0.4);
+}
+
+.prediction-card:hover::before {
+  opacity: 1;
+}
+
+.prediction-card.locked {
+  border-color: #A3FF12;
+  box-shadow: 0 0 15px rgba(163, 255, 18, 0.2);
+}
+
+/* Delete Button */
+.delete-btn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: rgba(255, 0, 110, 0.2);
+  border: 1px solid #FF006E;
+  color: #FF006E;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+.delete-btn:hover {
+  background: rgba(255, 0, 110, 0.3);
+  box-shadow: 0 0 15px rgba(255, 0, 110, 0.5);
+  transform: scale(1.1);
+}
+
+/* Game Header (in prediction cards) */
+.prediction-card .game-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  margin: 0;
+  padding: 0;
+  border: none;
+  position: relative;
+  z-index: 1;
+  min-width: 90px;
+}
+
+.prediction-card .game-time {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.prediction-card .date {
+  font-family: 'Rajdhani', sans-serif;
+  color: #F59E0B;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.prediction-card .time {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.7rem;
+}
+
+.prediction-card .today-badge {
+  background: #A3FF12;
+  color: #0A1128;
+  padding: 1px 4px;
+  border-radius: 3px;
+  font-size: 0.55rem;
+  font-weight: 700;
+  margin-top: 0.15rem;
+  display: inline-block;
+  box-shadow: 0 0 8px rgba(163, 255, 18, 0.5);
+  width: fit-content;
+}
+
+/* Teams Section (in prediction cards) */
+.prediction-card .teams-section {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  z-index: 1;
+  flex: 1;
+}
+
+.prediction-card .team {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.prediction-card .team-name {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+.prediction-card .team-label {
+  font-size: 0.6rem;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.prediction-card .vs-divider {
+  font-size: 0.9rem;
+  color: #F59E0B;
+  font-weight: 700;
+  font-family: 'Rajdhani', sans-serif;
+}
+
+/* Bet Details Section */
+.bet-details {
+  background: rgba(15, 23, 42, 0.5);
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  margin: 0;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 220px;
+}
+
+.bet-type-badge {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  margin: 0;
+  white-space: nowrap;
+}
+
+.bet-type-badge.moneyline {
+  background: rgba(167, 139, 250, 0.2);
+  color: #A78BFA;
+  border: 1px solid rgba(167, 139, 250, 0.4);
+}
+
+.bet-type-badge.spread {
+  background: rgba(245, 158, 11, 0.2);
+  color: #F59E0B;
+  border: 1px solid rgba(245, 158, 11, 0.4);
+}
+
+.bet-type-badge.total {
+  background: rgba(163, 255, 18, 0.2);
+  color: #A3FF12;
+  border: 1px solid rgba(163, 255, 18, 0.4);
+}
+
+.your-pick {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  flex: 1;
+}
+
+.pick-label {
+  font-size: 0.65rem;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.pick-value {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #A3FF12;
+  text-shadow: 0 0 8px rgba(163, 255, 18, 0.5);
+}
+
+/* Prediction Footer */
+.prediction-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  gap: 0.5rem;
+}
+
+.status-badge {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.status-badge.pending {
+  background: rgba(245, 158, 11, 0.2);
+  color: #F59E0B;
+  border: 1px solid rgba(245, 158, 11, 0.5);
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.3);
+}
+
+.status-badge.locked {
+  background: rgba(163, 255, 18, 0.2);
+  color: #A3FF12;
+  border: 1px solid rgba(163, 255, 18, 0.5);
+  box-shadow: 0 0 10px rgba(163, 255, 18, 0.4);
+}
+
+.lock-btn {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.35rem 0.75rem;
+  background: linear-gradient(135deg, rgba(167, 139, 250, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%);
+  color: #A78BFA;
+  border: 1px solid rgba(167, 139, 250, 0.5);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.lock-btn:hover {
+  background: linear-gradient(135deg, rgba(167, 139, 250, 0.3) 0%, rgba(139, 92, 246, 0.3) 100%);
+  box-shadow: 0 0 15px rgba(167, 139, 250, 0.4);
+  transform: scale(1.05);
+}
+
+/* Lock Confirmation Modal */
+.lock-confirmation-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(10, 17, 40, 0.85);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.lock-confirmation-modal {
+  background: linear-gradient(135deg, rgba(26, 35, 58, 0.95) 0%, rgba(31, 41, 65, 0.95) 100%);
+  border: 2px solid #A78BFA;
+  border-radius: 16px;
+  padding: 2rem;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), 0 0 40px rgba(167, 139, 250, 0.3);
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.lock-confirmation-modal h3 {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1.5rem;
+  color: #A78BFA;
+  margin: 0 0 1rem 0;
+}
+
+.lock-confirmation-modal p {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0.5rem 0;
+}
+
+.confirm-note {
+  color: #A3FF12 !important;
+  font-weight: 600;
+  font-size: 0.9rem !important;
+  margin-top: 1rem !important;
+}
+
+.confirm-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.confirm-lock-btn,
+.cancel-lock-btn {
+  flex: 1;
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid;
+}
+
+.confirm-lock-btn {
+  background: linear-gradient(135deg, #A3FF12 0%, #7BC90C 100%);
+  color: #0A1128;
+  border-color: #A3FF12;
+  box-shadow: 0 0 20px rgba(163, 255, 18, 0.5);
+}
+
+.confirm-lock-btn:hover {
+  background: linear-gradient(135deg, #7BC90C 0%, #66A80A 100%);
+  box-shadow: 0 0 30px rgba(163, 255, 18, 0.7);
+  transform: translateY(-2px);
+}
+
+.cancel-lock-btn {
+  background: transparent;
+  color: rgba(255, 255, 255, 0.8);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.cancel-lock-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
+}
+
 .nav-button {
   font-family: 'Inter', sans-serif;
   font-size: 1rem;
@@ -422,5 +871,42 @@
 
   .section-placeholder-box {
     padding: 2rem 1rem;
+  }
+
+  .prediction-card {
+    padding: 1rem;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .predictions-grid {
+    gap: 0.75rem;
+  }
+
+  .prediction-card .teams-section {
+    justify-content: flex-start;
+  }
+
+  .bet-details {
+    min-width: auto;
+  }
+
+  .filter-tabs {
+    gap: 0.25rem;
+  }
+
+  .filter-tab {
+    font-size: 0.75rem;
+    padding: 0.4rem 0.75rem;
+  }
+
+  .lock-confirmation-modal {
+    margin: 1rem;
+    padding: 1.5rem;
+  }
+
+  .confirm-buttons {
+    flex-direction: column;
+    gap: 0.75rem;
   }
 }

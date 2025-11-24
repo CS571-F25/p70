@@ -17,6 +17,34 @@
   animation: fadeInUp 0.6s ease-out;
 }
 
+.header-info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.predictions-badge {
+  background: linear-gradient(135deg, #A3FF12 0%, #7BC90C 100%);
+  color: #0A1128;
+  padding: 0.5rem 1.25rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  box-shadow: 0 0 20px rgba(163, 255, 18, 0.6);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(163, 255, 18, 0.6);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(163, 255, 18, 0.8);
+  }
+}
+
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -142,6 +170,11 @@
   overflow: hidden;
 }
 
+.game-card.game-started {
+  opacity: 0.7;
+  filter: grayscale(0.3);
+}
+
 .game-card::before {
   content: '';
   position: absolute;
@@ -204,6 +237,18 @@
   margin-top: 0.25rem;
   display: inline-block;
   box-shadow: 0 0 10px rgba(163, 255, 18, 0.5);
+}
+
+.started-badge {
+  background: #FF006E;
+  color: #FFFFFF;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  margin-top: 0.25rem;
+  display: inline-block;
+  box-shadow: 0 0 10px rgba(255, 0, 110, 0.5);
 }
 
 .bookmaker-badge {
@@ -299,13 +344,53 @@
   flex-direction: column;
   gap: 0.5rem;
   text-align: left;
+  position: relative;
 }
 
-.odds-btn:hover {
+.odds-btn:hover:not(.disabled) {
   background: rgba(167, 139, 250, 0.25);
   border-color: #A78BFA;
   transform: translateY(-3px);
   box-shadow: 0 4px 12px rgba(167, 139, 250, 0.3);
+}
+
+/* Selected State - Lime Highlight */
+.odds-btn.selected {
+  background: linear-gradient(135deg, rgba(163, 255, 18, 0.3) 0%, rgba(123, 201, 12, 0.3) 100%);
+  border: 2px solid #A3FF12;
+  box-shadow: 0 0 20px rgba(163, 255, 18, 0.5), 0 4px 15px rgba(0, 0, 0, 0.3);
+  transform: translateY(-3px) scale(1.02);
+}
+
+/* Locked State - Checkmark for Confirmed */
+.odds-btn.locked {
+  background: linear-gradient(135deg, rgba(167, 139, 250, 0.4) 0%, rgba(139, 92, 246, 0.4) 100%);
+  border: 2px solid #A78BFA;
+  box-shadow: 0 0 15px rgba(167, 139, 250, 0.4);
+  cursor: default;
+}
+
+.checkmark {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  color: #A3FF12;
+  font-size: 1.2rem;
+  text-shadow: 0 0 10px rgba(163, 255, 18, 0.8);
+}
+
+/* Disabled State */
+.odds-btn.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  filter: grayscale(0.5);
+}
+
+.odds-btn.disabled:hover {
+  transform: none;
+  box-shadow: none;
+  background: rgba(167, 139, 250, 0.15);
+  border-color: rgba(167, 139, 250, 0.35);
 }
 
 .odds-team {
@@ -322,6 +407,125 @@
   text-shadow: 0 0 10px rgba(163, 255, 18, 0.5);
 }
 
+/* Confirmation Buttons */
+.confirmation-buttons {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: linear-gradient(135deg, rgba(26, 35, 58, 0.95) 0%, rgba(31, 41, 65, 0.95) 100%);
+  border: 2px solid #A3FF12;
+  border-radius: 16px;
+  padding: 1.5rem 2rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(163, 255, 18, 0.4);
+  backdrop-filter: blur(10px);
+  z-index: 1000;
+  animation: slideUpFade 0.4s ease-out;
+}
+
+@keyframes slideUpFade {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.confirmation-info {
+  color: #FFFFFF;
+  font-size: 1rem;
+  max-width: 300px;
+}
+
+.confirmation-info strong {
+  color: #F59E0B;
+}
+
+.confirm-btn,
+.clear-btn {
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid;
+  white-space: nowrap;
+}
+
+.confirm-btn {
+  background: linear-gradient(135deg, #A3FF12 0%, #7BC90C 100%);
+  color: #0A1128;
+  border-color: #A3FF12;
+  box-shadow: 0 0 20px rgba(163, 255, 18, 0.5);
+}
+
+.confirm-btn:hover {
+  background: linear-gradient(135deg, #7BC90C 0%, #66A80A 100%);
+  box-shadow: 0 0 30px rgba(163, 255, 18, 0.7), 0 5px 20px rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
+}
+
+.clear-btn {
+  background: transparent;
+  color: #FF006E;
+  border-color: #FF006E;
+}
+
+.clear-btn:hover {
+  background: rgba(255, 0, 110, 0.1);
+  box-shadow: 0 0 20px rgba(255, 0, 110, 0.3), 0 5px 20px rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
+}
+
+/* Toast Notification */
+.toast-notification {
+  position: fixed;
+  top: 100px;
+  right: 2rem;
+  background: linear-gradient(135deg, rgba(26, 35, 58, 0.95) 0%, rgba(31, 41, 65, 0.95) 100%);
+  border: 2px solid #A78BFA;
+  border-radius: 12px;
+  padding: 1rem 1.5rem;
+  color: #FFFFFF;
+  font-size: 1rem;
+  font-weight: 600;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(167, 139, 250, 0.4);
+  backdrop-filter: blur(10px);
+  z-index: 1001;
+  animation: toastSlideIn 0.4s ease-out, toastSlideOut 0.4s ease-out 2.6s;
+  animation-fill-mode: forwards;
+}
+
+@keyframes toastSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes toastSlideOut {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(100px);
+  }
+}
+
 /* Responsive Design */
 @media (max-width: 968px) {
   .games-container {
@@ -330,6 +534,29 @@
   
   .page-title {
     font-size: 2.5rem;
+  }
+
+  .confirmation-buttons {
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1rem 1.5rem;
+    max-width: 90%;
+  }
+
+  .confirmation-info {
+    max-width: 100%;
+    text-align: center;
+  }
+
+  .confirm-btn,
+  .clear-btn {
+    width: 100%;
+  }
+
+  .toast-notification {
+    right: 1rem;
+    left: 1rem;
+    text-align: center;
   }
 }
 
@@ -367,5 +594,15 @@
 
   .odds-grid {
     grid-template-columns: 1fr;
+  }
+
+  .confirmation-buttons {
+    bottom: 1rem;
+    padding: 1rem;
+  }
+
+  .toast-notification {
+    top: 80px;
+    font-size: 0.9rem;
   }
 }
