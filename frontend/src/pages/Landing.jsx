@@ -1,8 +1,8 @@
 import '../Landing.css';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 
 function Landing() {
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const features = [
     {
@@ -34,12 +34,17 @@ function Landing() {
         <div className="navbar-container">
           <span className="brand-wordmark">PlayMaker</span>
           <ul className="navbar-links">
-            <li><a href="#" className="nav-link" onClick={(e) => { e.preventDefault(); navigate('/overview'); }}>Overview</a></li>
-            <li><a href="#" className="nav-link" onClick={(e) => { e.preventDefault(); navigate('/dashboard'); }}>Dashboard</a></li>
-            <li><a href="#" className="nav-link" onClick={(e) => { e.preventDefault(); navigate('/predictions'); }}>Predictions</a></li>
-            <li><a href="#" className="nav-link" onClick={(e) => { e.preventDefault(); navigate('/rating'); }}>Rating</a></li>
-            <li><a href="#" className="nav-link" onClick={(e) => { e.preventDefault(); navigate('/profile'); }}>Profile</a></li>
+            <li><a href="#" className="nav-link" onClick={(e) => { e.preventDefault(); router.push('/overview'); }}>Overview</a></li>
+            <li><a href="#" className="nav-link" onClick={(e) => { e.preventDefault(); router.push('/dashboard'); }}>Dashboard</a></li>
+            <li><a href="#" className="nav-link" onClick={(e) => { e.preventDefault(); router.push('/predictions'); }}>Predictions</a></li>
+            <li><a href="#" className="nav-link" onClick={(e) => { e.preventDefault(); router.push('/rating'); }}>Rating</a></li>
+            <li><a href="#" className="nav-link" onClick={(e) => { e.preventDefault(); router.push('/profile'); }}>Profile</a></li>
           </ul>
+          <div className="navbar-actions">
+            <button onClick={() => router.push('/login')} className="nav-btn login-btn">
+              Log In
+            </button>
+          </div>
         </div>
       </nav>
 
@@ -51,6 +56,15 @@ function Landing() {
           <p className="hero-subtitle">
             Your personalized NBA dashboard for live games, predictions, ratings, and team tracking — all in one sleek sports-tech experience.
           </p>
+          
+          <div className="hero-cta">
+            <button className="cta-btn primary-cta" onClick={() => router.push('/login')}>
+              Get Started
+            </button>
+            <button className="cta-btn secondary-cta" onClick={() => router.push('/login')}>
+              Log In
+            </button>
+          </div>
         </div>
       </section>
 
@@ -61,7 +75,7 @@ function Landing() {
             <div 
               key={index} 
               className="feature-card"
-              onClick={() => navigate(`/${feature.title.toLowerCase().replace(' ', '-')}`)}
+              onClick={() => router.push(`/${feature.title.toLowerCase().replace(' ', '-')}`)}
             >
               <h3 className="feature-title">{feature.title}</h3>
               <p className="feature-description">{feature.description}</p>
@@ -69,6 +83,7 @@ function Landing() {
           ))}
         </div>
       </section>
+
 
       {/* Footer */}
       <footer className="footer">

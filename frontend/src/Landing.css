@@ -172,6 +172,51 @@
   margin-right: auto;
 }
 
+.hero-cta {
+  margin-top: 2.5rem;
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  animation: fadeInUp 1s ease-out;
+}
+
+.cta-btn {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  padding: 1rem 2.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.primary-cta {
+  background: #3B82F6; /* Electric Blue */
+  color: #FFFFFF;
+  border: none;
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+}
+
+.primary-cta:hover {
+  background: #2563EB;
+  transform: translateY(-2px);
+  box-shadow: 0 0 30px rgba(59, 130, 246, 0.6);
+}
+
+.secondary-cta {
+  background: transparent;
+  border: 1px solid #A3FF12; /* Neon Lime */
+  color: #A3FF12;
+}
+
+.secondary-cta:hover {
+  background: rgba(163, 255, 18, 0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 0 20px rgba(163, 255, 18, 0.3);
+}
+
 /* Features Section */
 .features-section {
   padding: 4rem 2rem;

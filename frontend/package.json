@@ -11,6 +11,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@supabase/ssr": "^0.7.0",
+    "@supabase/supabase-js": "^2.84.0",
     "bootstrap": "^5.3.8",
     "next": "^16.0.4",
     "react": "^19.1.1",

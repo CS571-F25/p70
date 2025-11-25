@@ -2,20 +2,34 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { createClient } from '@/utils/supabase/client';
 import { getPendingPredictions, getLockedPredictions, deletePrediction, lockPrediction } from '../../utils/predictionStorage';
 import '../../pages/Dashboard.css';
 
 function Dashboard() {
   const router = useRouter();
+  const supabase = createClient();
+  const [user, setUser] = useState(null);
   const [predictions, setPredictions] = useState([]);
   const [filter, setFilter] = useState('all');
   const [showConfirm, setShowConfirm] = useState(null);
 
   useEffect(() => {
+    const getUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+    };
+    getUser();
     loadPredictions();
     window.addEventListener('focus', loadPredictions);
     return () => window.removeEventListener('focus', loadPredictions);
   }, []);
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    router.push('/login');
+    router.refresh();
+  };
 
   const loadPredictions = () => {
     const pending = getPendingPredictions();
@@ -61,7 +75,7 @@ function Dashboard() {
   const lockedCount = predictions.filter(p => p.status === 'locked').length;
 
   const [userData] = useState({
-    username: 'PlayMaker',
+    username: user?.email?.split('@')[0] || 'PlayMaker',
     elo: 1847,
     wins: 42,
     losses: 18,
@@ -91,6 +105,12 @@ function Dashboard() {
     <div className="dashboard-page">
       <div className="stats-header">
         <div className="stats-header-container">
+          <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginBottom: '1rem', alignItems: 'center' }}>
+             <div className="user-welcome" style={{ color: '#fff', fontSize: '1.2rem' }}>
+                Welcome, <span style={{ color: '#3B82F6', fontWeight: 'bold' }}>{user?.user_metadata?.username || user?.email}</span>
+             </div>
+          </div>
+
           <div className="elo-display">
             <div className="elo-label">ELO Rating</div>
             <div className="elo-value">{userData.elo}</div>
