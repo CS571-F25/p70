@@ -161,6 +161,51 @@
   line-height: 1.6;
 }
 
+.hero-cta {
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+  animation: 1s ease-out fadeInUp;
+  display: flex;
+}
+
+.cta-btn {
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  border-radius: 8px;
+  padding: 1rem 2.5rem;
+  font-family: Rajdhani, sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  transition: all .3s;
+}
+
+.primary-cta {
+  color: #fff;
+  background: #3b82f6;
+  border: none;
+  box-shadow: 0 0 20px #3b82f666;
+}
+
+.primary-cta:hover {
+  background: #2563eb;
+  transform: translateY(-2px);
+  box-shadow: 0 0 30px #3b82f699;
+}
+
+.secondary-cta {
+  color: #a3ff12;
+  background: none;
+  border: 1px solid #a3ff12;
+}
+
+.secondary-cta:hover {
+  background: #a3ff121a;
+  transform: translateY(-2px);
+  box-shadow: 0 0 20px #a3ff124d;
+}
+
 .features-section {
   max-width: 1200px;
   margin: 0 auto;

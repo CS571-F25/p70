@@ -16,14 +16,18 @@ function Dashboard() {
 
   useEffect(() => {
     const getUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      setUser(user);
+      const { data: { user }, error } = await supabase.auth.getUser();
+      if (error || !user) {
+        router.push('/login');
+      } else {
+        setUser(user);
+      }
     };
     getUser();
     loadPredictions();
     window.addEventListener('focus', loadPredictions);
     return () => window.removeEventListener('focus', loadPredictions);
-  }, []);
+  }, [router, supabase]);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();

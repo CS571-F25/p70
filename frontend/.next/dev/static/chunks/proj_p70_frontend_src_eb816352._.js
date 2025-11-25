@@ -92,6 +92,7 @@ __turbopack_context__.s([
 var __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/proj/p70/frontend/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/proj/p70/frontend/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/proj/p70/frontend/node_modules/next/navigation.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$src$2f$utils$2f$supabase$2f$client$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/proj/p70/frontend/src/utils/supabase/client.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$src$2f$utils$2f$predictionStorage$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/proj/p70/frontend/src/utils/predictionStorage.js [app-client] (ecmascript)");
 ;
 var _s = __turbopack_context__.k.signature();
@@ -100,14 +101,24 @@ var _s = __turbopack_context__.k.signature();
 ;
 ;
 ;
+;
 function Dashboard() {
     _s();
     const router = (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRouter"])();
+    const supabase = (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$src$2f$utils$2f$supabase$2f$client$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["createClient"])();
+    const [user, setUser] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
     const [predictions, setPredictions] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
     const [filter, setFilter] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])('all');
     const [showConfirm, setShowConfirm] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "Dashboard.useEffect": ()=>{
+            const getUser = {
+                "Dashboard.useEffect.getUser": async ()=>{
+                    const { data: { user } } = await supabase.auth.getUser();
+                    setUser(user);
+                }
+            }["Dashboard.useEffect.getUser"];
+            getUser();
             loadPredictions();
             window.addEventListener('focus', loadPredictions);
             return ({
@@ -115,6 +126,11 @@ function Dashboard() {
             })["Dashboard.useEffect"];
         }
     }["Dashboard.useEffect"], []);
+    const handleLogout = async ()=>{
+        await supabase.auth.signOut();
+        router.push('/login');
+        router.refresh();
+    };
     const loadPredictions = ()=>{
         const pending = (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$src$2f$utils$2f$predictionStorage$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["getPendingPredictions"])();
         const locked = (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$src$2f$utils$2f$predictionStorage$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["getLockedPredictions"])();
@@ -155,7 +171,7 @@ function Dashboard() {
     const pendingCount = predictions.filter((p)=>p.status === 'pending').length;
     const lockedCount = predictions.filter((p)=>p.status === 'locked').length;
     const [userData] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])({
-        username: 'PlayMaker',
+        username: user?.email?.split('@')[0] || 'PlayMaker',
         elo: 1847,
         wins: 42,
         losses: 18,
@@ -187,6 +203,44 @@ function Dashboard() {
                     className: "stats-header-container",
                     children: [
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            style: {
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                width: '100%',
+                                marginBottom: '1rem',
+                                alignItems: 'center'
+                            },
+                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "user-welcome",
+                                style: {
+                                    color: '#fff',
+                                    fontSize: '1.2rem'
+                                },
+                                children: [
+                                    "Welcome, ",
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        style: {
+                                            color: '#3B82F6',
+                                            fontWeight: 'bold'
+                                        },
+                                        children: user?.user_metadata?.username || user?.email
+                                    }, void 0, false, {
+                                        fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
+                                        lineNumber: 110,
+                                        columnNumber: 26
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
+                                lineNumber: 109,
+                                columnNumber: 14
+                            }, this)
+                        }, void 0, false, {
+                            fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
+                            lineNumber: 108,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                             className: "elo-display",
                             children: [
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -194,7 +248,7 @@ function Dashboard() {
                                     children: "ELO Rating"
                                 }, void 0, false, {
                                     fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                    lineNumber: 95,
+                                    lineNumber: 115,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -202,7 +256,7 @@ function Dashboard() {
                                     children: userData.elo
                                 }, void 0, false, {
                                     fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                    lineNumber: 96,
+                                    lineNumber: 116,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -210,13 +264,13 @@ function Dashboard() {
                                     children: "+24 today"
                                 }, void 0, false, {
                                     fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                    lineNumber: 97,
+                                    lineNumber: 117,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                            lineNumber: 94,
+                            lineNumber: 114,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -230,7 +284,7 @@ function Dashboard() {
                                             children: "📊"
                                         }, void 0, false, {
                                             fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                            lineNumber: 102,
+                                            lineNumber: 122,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -241,7 +295,7 @@ function Dashboard() {
                                                     children: "Win/Loss"
                                                 }, void 0, false, {
                                                     fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                                    lineNumber: 104,
+                                                    lineNumber: 124,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -254,7 +308,7 @@ function Dashboard() {
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                                    lineNumber: 105,
+                                                    lineNumber: 125,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -265,19 +319,19 @@ function Dashboard() {
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                                    lineNumber: 106,
+                                                    lineNumber: 126,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                            lineNumber: 103,
+                                            lineNumber: 123,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                    lineNumber: 101,
+                                    lineNumber: 121,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -288,7 +342,7 @@ function Dashboard() {
                                             children: userData.streakType === 'win' ? '🔥' : '❄️'
                                         }, void 0, false, {
                                             fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                            lineNumber: 111,
+                                            lineNumber: 131,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -299,7 +353,7 @@ function Dashboard() {
                                                     children: "Current Streak"
                                                 }, void 0, false, {
                                                     fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                                    lineNumber: 113,
+                                                    lineNumber: 133,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -311,7 +365,7 @@ function Dashboard() {
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                                    lineNumber: 114,
+                                                    lineNumber: 134,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -319,19 +373,19 @@ function Dashboard() {
                                                     children: userData.streakType === 'win' ? 'Keep it going!' : 'Bounce back!'
                                                 }, void 0, false, {
                                                     fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                                    lineNumber: 117,
+                                                    lineNumber: 137,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                            lineNumber: 112,
+                                            lineNumber: 132,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                    lineNumber: 110,
+                                    lineNumber: 130,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -350,7 +404,7 @@ function Dashboard() {
                                                 children: "👑"
                                             }, void 0, false, {
                                                 fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                                lineNumber: 123,
+                                                lineNumber: 143,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -364,7 +418,7 @@ function Dashboard() {
                                                         children: userData.rank
                                                     }, void 0, false, {
                                                         fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                                        lineNumber: 125,
+                                                        lineNumber: 145,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -372,41 +426,41 @@ function Dashboard() {
                                                         children: userData.tier
                                                     }, void 0, false, {
                                                         fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                                        lineNumber: 128,
+                                                        lineNumber: 148,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                                lineNumber: 124,
+                                                lineNumber: 144,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                        lineNumber: 122,
+                                        lineNumber: 142,
                                         columnNumber: 15
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                    lineNumber: 121,
+                                    lineNumber: 141,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                            lineNumber: 100,
+                            lineNumber: 120,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                    lineNumber: 93,
+                    lineNumber: 107,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                lineNumber: 92,
+                lineNumber: 106,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -426,7 +480,7 @@ function Dashboard() {
                                                 children: "Active Picks"
                                             }, void 0, false, {
                                                 fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                                lineNumber: 140,
+                                                lineNumber: 160,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -439,13 +493,13 @@ function Dashboard() {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                                lineNumber: 141,
+                                                lineNumber: 161,
                                                 columnNumber: 15
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                        lineNumber: 139,
+                                        lineNumber: 159,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -461,7 +515,7 @@ function Dashboard() {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                                lineNumber: 147,
+                                                lineNumber: 167,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -474,7 +528,7 @@ function Dashboard() {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                                lineNumber: 153,
+                                                lineNumber: 173,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -487,13 +541,13 @@ function Dashboard() {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                                lineNumber: 159,
+                                                lineNumber: 179,
                                                 columnNumber: 15
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                        lineNumber: 146,
+                                        lineNumber: 166,
                                         columnNumber: 13
                                     }, this),
                                     filteredPredictions.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -504,7 +558,7 @@ function Dashboard() {
                                                 children: "🏀"
                                             }, void 0, false, {
                                                 fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                                lineNumber: 169,
+                                                lineNumber: 189,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -515,14 +569,14 @@ function Dashboard() {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                                lineNumber: 170,
+                                                lineNumber: 190,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                 children: "Head to Predictions page to make your picks!"
                                             }, void 0, false, {
                                                 fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                                lineNumber: 171,
+                                                lineNumber: 191,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -531,13 +585,13 @@ function Dashboard() {
                                                 children: "Make Predictions"
                                             }, void 0, false, {
                                                 fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                                lineNumber: 172,
+                                                lineNumber: 192,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                        lineNumber: 168,
+                                        lineNumber: 188,
                                         columnNumber: 15
                                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         className: "predictions-grid",
@@ -555,7 +609,7 @@ function Dashboard() {
                                                         children: "✕"
                                                     }, void 0, false, {
                                                         fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                                        lineNumber: 185,
+                                                        lineNumber: 205,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -568,7 +622,7 @@ function Dashboard() {
                                                                     children: gameTime.toLocaleDateString()
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                                                    lineNumber: 195,
+                                                                    lineNumber: 215,
                                                                     columnNumber: 27
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -579,7 +633,7 @@ function Dashboard() {
                                                                     })
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                                                    lineNumber: 196,
+                                                                    lineNumber: 216,
                                                                     columnNumber: 27
                                                                 }, this),
                                                                 isToday && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -587,18 +641,18 @@ function Dashboard() {
                                                                     children: "TODAY"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                                                    lineNumber: 197,
+                                                                    lineNumber: 217,
                                                                     columnNumber: 39
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                                            lineNumber: 194,
+                                                            lineNumber: 214,
                                                             columnNumber: 25
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                                        lineNumber: 193,
+                                                        lineNumber: 213,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -612,7 +666,7 @@ function Dashboard() {
                                                                         children: pred.awayTeam
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                                                        lineNumber: 203,
+                                                                        lineNumber: 223,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -620,13 +674,13 @@ function Dashboard() {
                                                                         children: "AWAY"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                                                        lineNumber: 204,
+                                                                        lineNumber: 224,
                                                                         columnNumber: 27
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                                                lineNumber: 202,
+                                                                lineNumber: 222,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -634,7 +688,7 @@ function Dashboard() {
                                                                 children: "@"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                                                lineNumber: 206,
+                                                                lineNumber: 226,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -645,7 +699,7 @@ function Dashboard() {
                                                                         children: pred.homeTeam
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                                                        lineNumber: 208,
+                                                                        lineNumber: 228,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -653,19 +707,19 @@ function Dashboard() {
                                                                         children: "HOME"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                                                        lineNumber: 209,
+                                                                        lineNumber: 229,
                                                                         columnNumber: 27
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                                                lineNumber: 207,
+                                                                lineNumber: 227,
                                                                 columnNumber: 25
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                                        lineNumber: 201,
+                                                        lineNumber: 221,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -676,7 +730,7 @@ function Dashboard() {
                                                                 children: pred.betType === 'moneyline' ? 'Moneyline' : pred.betType === 'spread' ? 'Spread' : 'Total Points'
                                                             }, void 0, false, {
                                                                 fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                                                lineNumber: 214,
+                                                                lineNumber: 234,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -687,7 +741,7 @@ function Dashboard() {
                                                                         children: "Your Pick:"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                                                        lineNumber: 220,
+                                                                        lineNumber: 240,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -702,19 +756,19 @@ function Dashboard() {
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                                                        lineNumber: 221,
+                                                                        lineNumber: 241,
                                                                         columnNumber: 27
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                                                lineNumber: 219,
+                                                                lineNumber: 239,
                                                                 columnNumber: 25
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                                        lineNumber: 213,
+                                                        lineNumber: 233,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -724,7 +778,7 @@ function Dashboard() {
                                                             children: "🔒 LOCKED"
                                                         }, void 0, false, {
                                                             fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                                            lineNumber: 231,
+                                                            lineNumber: 251,
                                                             columnNumber: 27
                                                         }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
                                                             children: [
@@ -733,7 +787,7 @@ function Dashboard() {
                                                                     children: "PENDING"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                                                    lineNumber: 234,
+                                                                    lineNumber: 254,
                                                                     columnNumber: 29
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -742,32 +796,32 @@ function Dashboard() {
                                                                     children: "🔓 Lock Pick"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                                                    lineNumber: 235,
+                                                                    lineNumber: 255,
                                                                     columnNumber: 29
                                                                 }, this)
                                                             ]
                                                         }, void 0, true)
                                                     }, void 0, false, {
                                                         fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                                        lineNumber: 229,
+                                                        lineNumber: 249,
                                                         columnNumber: 23
                                                     }, this)
                                                 ]
                                             }, pred.id, true, {
                                                 fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                                lineNumber: 184,
+                                                lineNumber: 204,
                                                 columnNumber: 21
                                             }, this);
                                         })
                                     }, void 0, false, {
                                         fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                        lineNumber: 177,
+                                        lineNumber: 197,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                lineNumber: 138,
+                                lineNumber: 158,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -780,12 +834,12 @@ function Dashboard() {
                                             children: "Quick Actions"
                                         }, void 0, false, {
                                             fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                            lineNumber: 253,
+                                            lineNumber: 273,
                                             columnNumber: 15
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                        lineNumber: 252,
+                                        lineNumber: 272,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -794,24 +848,24 @@ function Dashboard() {
                                             children: "Quick Actions content coming soon..."
                                         }, void 0, false, {
                                             fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                            lineNumber: 256,
+                                            lineNumber: 276,
                                             columnNumber: 15
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                        lineNumber: 255,
+                                        lineNumber: 275,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                lineNumber: 251,
+                                lineNumber: 271,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                        lineNumber: 137,
+                        lineNumber: 157,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -825,7 +879,7 @@ function Dashboard() {
                                         children: "Friends Leaderboard"
                                     }, void 0, false, {
                                         fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                        lineNumber: 263,
+                                        lineNumber: 283,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -833,13 +887,13 @@ function Dashboard() {
                                         children: "12 friends"
                                     }, void 0, false, {
                                         fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                        lineNumber: 264,
+                                        lineNumber: 284,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                lineNumber: 262,
+                                lineNumber: 282,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -848,18 +902,18 @@ function Dashboard() {
                                     children: "Friends Leaderboard content coming soon..."
                                 }, void 0, false, {
                                     fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                    lineNumber: 267,
+                                    lineNumber: 287,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                lineNumber: 266,
+                                lineNumber: 286,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                        lineNumber: 261,
+                        lineNumber: 281,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -872,12 +926,12 @@ function Dashboard() {
                                     children: "Recent Results"
                                 }, void 0, false, {
                                     fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                    lineNumber: 273,
+                                    lineNumber: 293,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                lineNumber: 272,
+                                lineNumber: 292,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -886,24 +940,24 @@ function Dashboard() {
                                     children: "Recent Results content coming soon..."
                                 }, void 0, false, {
                                     fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                    lineNumber: 276,
+                                    lineNumber: 296,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                lineNumber: 275,
+                                lineNumber: 295,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                        lineNumber: 271,
+                        lineNumber: 291,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                lineNumber: 136,
+                lineNumber: 156,
                 columnNumber: 7
             }, this),
             showConfirm && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -915,14 +969,14 @@ function Dashboard() {
                             children: "🔒 Lock This Prediction?"
                         }, void 0, false, {
                             fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                            lineNumber: 284,
+                            lineNumber: 304,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                             children: "You won't be able to change or delete it."
                         }, void 0, false, {
                             fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                            lineNumber: 285,
+                            lineNumber: 305,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -930,7 +984,7 @@ function Dashboard() {
                             children: "This pick will count towards your ELO rating!"
                         }, void 0, false, {
                             fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                            lineNumber: 286,
+                            lineNumber: 306,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -942,7 +996,7 @@ function Dashboard() {
                                     children: "Confirm Lock"
                                 }, void 0, false, {
                                     fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                    lineNumber: 288,
+                                    lineNumber: 308,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -951,34 +1005,34 @@ function Dashboard() {
                                     children: "Cancel"
                                 }, void 0, false, {
                                     fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                                    lineNumber: 291,
+                                    lineNumber: 311,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                            lineNumber: 287,
+                            lineNumber: 307,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                    lineNumber: 283,
+                    lineNumber: 303,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-                lineNumber: 282,
+                lineNumber: 302,
                 columnNumber: 9
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/proj/p70/frontend/src/app/dashboard/page.jsx",
-        lineNumber: 91,
+        lineNumber: 105,
         columnNumber: 5
     }, this);
 }
-_s(Dashboard, "+KYsqqNv+ZHCzqTuqvqY40FVpOs=", false, function() {
+_s(Dashboard, "XPaffyzMbbaR174WzxTfs/tDI64=", false, function() {
     return [
         __TURBOPACK__imported__module__$5b$project$5d2f$proj$2f$p70$2f$frontend$2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRouter"]
     ];
