@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 14, "column": 0}, "map": {"version":3,"sources":["file:///Users/user/Desktop/proj/p70/frontend/src/app/profile/page.jsx"],"sourcesContent":["export default function Profile() {\n  return (\n    <div style={{ padding: '100px 40px 40px', textAlign: 'center', minHeight: '100vh', background: '#0A1128', color: '#FFFFFF' }}>\n      <h1>Profile</h1>\n      <p style={{ marginTop: '20px', color: 'rgba(255, 255, 255, 0.7)' }}>Content coming soon...</p>\n    </div>\n  );\n}\n"],"names":[],"mappings":";;;;;;AAAe,SAAS;IACtB,qBACE,yQAAC;QAAI,OAAO;YAAE,SAAS;YAAmB,WAAW;YAAU,WAAW;YAAS,YAAY;YAAW,OAAO;QAAU;;0BACzH,yQAAC;0BAAG;;;;;;0BACJ,yQAAC;gBAAE,OAAO;oBAAE,WAAW;oBAAQ,OAAO;gBAA2B;0BAAG;;;;;;;;;;;;AAG1E"}}]
-}

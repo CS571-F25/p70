@@ -6,7 +6,7 @@
   "homepage": "https://CS571-F25.github.io/p70",
   "scripts": {
     "dev": "next dev",
-    "build": "next build && rm -rf docs && mv out docs && touch docs/.nojekyll",
+    "build": "next build && rm -rf ../docs && mv out ../docs && touch ../docs/.nojekyll",
     "start": "next start",
     "lint": "next lint"
   },
