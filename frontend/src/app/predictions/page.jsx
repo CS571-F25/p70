@@ -9,7 +9,7 @@ import {
   hasPrediction,
   getPrediction
 } from '../../utils/predictionStorage';
-import '../../pages/Predictions.css';
+import './Predictions.css';
 
 function Predictions() {
   const [games, setGames] = useState([]);

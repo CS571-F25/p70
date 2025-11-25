@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
 import { getPendingPredictions, getLockedPredictions, deletePrediction, lockPrediction } from '../../utils/predictionStorage';
-import '../../pages/Dashboard.css';
+import './Dashboard.css';
 
 function Dashboard() {
   const router = useRouter();
