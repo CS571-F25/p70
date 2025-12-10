@@ -1,0 +1,448 @@
+/* Overview Page Styles - PlayMaker Design System */
+
+.overview-page {
+  min-height: 100vh;
+  background: #0A1128;
+  color: #FFFFFF;
+  font-family: 'Inter', sans-serif;
+  padding: 100px 2rem 60px;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* ===== STEP 1: PAGE HEADER ===== */
+.overview-header {
+  text-align: center;
+  margin-bottom: 4rem;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.header-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, #A3FF12 0%, #7BC90C 100%);
+  color: #0A1128;
+  padding: 0.5rem 1.25rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 0 20px rgba(163, 255, 18, 0.6);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.overview-title {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin: 0 0 1rem 0;
+  line-height: 1.2;
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #A78BFA 0%, #8B5CF6 50%, #F59E0B 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: none;
+  animation: glow 3s ease-in-out infinite alternate;
+}
+
+.overview-tagline {
+  font-size: 1.5rem;
+  color: #A78BFA;
+  margin: 0 0 0.75rem 0;
+  font-weight: 500;
+}
+
+.overview-subtitle {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(163, 255, 18, 0.6);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(163, 255, 18, 0.8);
+  }
+}
+
+@keyframes glow {
+  from {
+    filter: drop-shadow(0 0 20px rgba(167, 139, 250, 0.5));
+  }
+  to {
+    filter: drop-shadow(0 0 30px rgba(167, 139, 250, 0.7));
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .overview-page {
+    padding: 90px 1rem 40px;
+  }
+
+  .overview-title {
+    font-size: 2.5rem;
+  }
+
+  .overview-tagline {
+    font-size: 1.25rem;
+  }
+
+  .overview-subtitle {
+    font-size: 1rem;
+  }
+}
+
+/* ===== STEP 2: QUICK START GUIDE ===== */
+.quick-start-section {
+  max-width: 1200px;
+  margin: 0 auto 4rem;
+  animation: fadeInUp 0.6s ease-out 0.2s both;
+}
+
+.section-title {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  text-align: center;
+  margin: 0 0 0.5rem 0;
+}
+
+.section-subtitle {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.6);
+  text-align: center;
+  margin: 0 0 2rem 0;
+}
+
+.quick-start-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.quick-start-card {
+  background: linear-gradient(145deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%);
+  border: 1px solid rgba(167, 139, 250, 0.2);
+  border-radius: 16px;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  position: relative;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.quick-start-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #A78BFA, #8B5CF6, #F59E0B);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.quick-start-card.clickable {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.quick-start-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(167, 139, 250, 0.4);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 30px rgba(167, 139, 250, 0.1);
+}
+
+.quick-start-card:hover::before {
+  opacity: 1;
+}
+
+.step-number {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  width: 28px;
+  height: 28px;
+  background: linear-gradient(135deg, #A78BFA 0%, #8B5CF6 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+.step-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.step-title {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #FFFFFF;
+  margin: 0 0 0.75rem 0;
+}
+
+.step-description {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.step-description strong {
+  color: #A78BFA;
+}
+
+/* Responsive for Quick Start */
+@media (max-width: 900px) {
+  .quick-start-cards {
+    grid-template-columns: 1fr;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+}
+
+/* ===== STEP 3: FEATURE CARDS SECTION ===== */
+.features-section {
+  max-width: 1200px;
+  margin: 0 auto 4rem;
+  animation: fadeInUp 0.6s ease-out 0.3s both;
+}
+
+/* ===== STEP 3: HOW TO PLAY SECTION ===== */
+.how-to-play-section {
+  max-width: 800px;
+  margin: 0 auto 4rem;
+  animation: fadeInUp 0.6s ease-out 0.3s both;
+}
+
+.how-to-play-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.play-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.25rem;
+  background: linear-gradient(145deg, rgba(30, 41, 59, 0.5) 0%, rgba(15, 23, 42, 0.7) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.play-step:hover {
+  border-color: rgba(167, 139, 250, 0.25);
+  transform: translateX(5px);
+}
+
+.play-icon-wrapper {
+  width: 50px;
+  height: 50px;
+  min-width: 50px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(167, 139, 250, 0.2) 0%, rgba(139, 92, 246, 0.3) 100%);
+  border: 1px solid rgba(167, 139, 250, 0.3);
+}
+
+.play-icon-wrapper.correct {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.2) 0%, rgba(22, 163, 74, 0.3) 100%);
+  border: 1px solid rgba(34, 197, 94, 0.4);
+}
+
+.play-icon-wrapper.wrong {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(220, 38, 38, 0.3) 100%);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+}
+
+.play-icon-wrapper.rank {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(234, 88, 12, 0.3) 100%);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+}
+
+.play-icon-wrapper.friends {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(37, 99, 235, 0.3) 100%);
+  border: 1px solid rgba(59, 130, 246, 0.4);
+}
+
+.play-icon {
+  font-size: 1.5rem;
+}
+
+.play-info {
+  flex: 1;
+}
+
+.play-title {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #FFFFFF;
+  margin: 0 0 0.4rem 0;
+}
+
+.play-description {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Responsive for How to Play */
+@media (max-width: 600px) {
+  .play-step {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+}
+
+/* Responsive for Features */
+@media (max-width: 900px) {
+  .feature-cards {
+    grid-template-columns: 1fr;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+}
+
+/* ===== STEP 5: KEY TERMS GLOSSARY ===== */
+.glossary-section {
+  max-width: 1200px;
+  margin: 0 auto 4rem;
+  animation: fadeInUp 0.6s ease-out 0.4s both;
+}
+
+.glossary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+}
+
+.glossary-item {
+  background: linear-gradient(145deg, rgba(30, 41, 59, 0.5) 0%, rgba(15, 23, 42, 0.7) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.glossary-item:hover {
+  border-color: rgba(167, 139, 250, 0.25);
+  background: linear-gradient(145deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.8) 100%);
+}
+
+.glossary-term {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #FFFFFF;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.term-icon {
+  font-size: 1.1rem;
+}
+
+.glossary-definition {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Responsive for Glossary */
+@media (max-width: 768px) {
+  .glossary-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===== STEP 6: TIPS SECTION ===== */
+.tips-section {
+  max-width: 900px;
+  margin: 0 auto 4rem;
+  animation: fadeInUp 0.6s ease-out 0.5s both;
+}
+
+.tips-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.tip-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  background: linear-gradient(145deg, rgba(163, 255, 18, 0.05) 0%, rgba(15, 23, 42, 0.6) 100%);
+  border: 1px solid rgba(163, 255, 18, 0.15);
+  border-radius: 12px;
+  padding: 1.25rem;
+  transition: all 0.3s ease;
+}
+
+.tip-item:hover {
+  border-color: rgba(163, 255, 18, 0.3);
+  background: linear-gradient(145deg, rgba(163, 255, 18, 0.08) 0%, rgba(15, 23, 42, 0.7) 100%);
+}
+
+.tip-icon {
+  font-size: 1.5rem;
+  min-width: 30px;
+}
+
+.tip-text {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.tip-text strong {
+  color: #A3FF12;
+  font-weight: 600;
+}
+
+/* Responsive for Tips */
+@media (max-width: 768px) {
+  .tips-grid {
+    grid-template-columns: 1fr;
+  }
+}
