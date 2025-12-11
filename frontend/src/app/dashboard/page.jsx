@@ -8,8 +8,11 @@ import {
   deletePick, 
   lockPick,
   getUserProfile,
-  getOrCreateProfile
+  getOrCreateProfile,
+  getPicksToValidate,
+  validateAndUpdatePick
 } from '../../utils/supabase/database';
+import { validationService } from '../../services/validationService';
 import './Dashboard.css';
 
 function Dashboard() {
@@ -21,6 +24,10 @@ function Dashboard() {
   const [filter, setFilter] = useState('all');
   const [showConfirm, setShowConfirm] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [validating, setValidating] = useState(false);
+  const [validationResults, setValidationResults] = useState([]);
+  const [showValidationToast, setShowValidationToast] = useState(false);
+  const [validationMessage, setValidationMessage] = useState('');
 
   useEffect(() => {
     const getUser = async () => {
@@ -29,22 +36,14 @@ function Dashboard() {
         router.push('/login');
       } else {
         setUser(user);
-        // Load profile from database
         const userProfile = await getOrCreateProfile();
         setProfile(userProfile);
-        // Load predictions from database
         await loadPredictions();
       }
       setLoading(false);
     };
     getUser();
   }, [router, supabase]);
-
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    router.push('/login');
-    router.refresh();
-  };
 
   const loadPredictions = async () => {
     const picks = await getUserPicks();
@@ -81,6 +80,80 @@ function Dashboard() {
     setShowConfirm(null);
   };
 
+  // Validate all locked picks that have completed games
+  const handleValidateResults = async () => {
+    setValidating(true);
+    setValidationResults([]);
+    
+    try {
+      // Get all locked picks that need validation
+      const picksToValidate = await getPicksToValidate();
+      
+      if (picksToValidate.length === 0) {
+        setValidationMessage('No picks to validate. Lock some picks first!');
+        setShowValidationToast(true);
+        setTimeout(() => setShowValidationToast(false), 3000);
+        setValidating(false);
+        return;
+      }
+      
+      // Get game results from API
+      const results = await validationService.validatePicks(picksToValidate);
+      
+      let validated = 0;
+      let totalEloChange = 0;
+      const newResults = [];
+      
+      // Process each result
+      for (const validationResult of results) {
+        if (validationResult.result && validationResult.result !== null) {
+          // Update the pick in database and get ELO change
+          const updateResult = await validateAndUpdatePick(
+            validationResult.pick.id, 
+            validationResult.result
+          );
+          
+          if (!updateResult.error) {
+            validated++;
+            totalEloChange += updateResult.eloChange || 0;
+            newResults.push({
+              pick: validationResult.pick,
+              result: validationResult.result,
+              eloChange: updateResult.eloChange,
+              homeScore: validationResult.homeScore,
+              awayScore: validationResult.awayScore
+            });
+          }
+        }
+      }
+      
+      setValidationResults(newResults);
+      
+      // Refresh data
+      await loadPredictions();
+      const updatedProfile = await getUserProfile();
+      setProfile(updatedProfile);
+      
+      // Show toast
+      if (validated > 0) {
+        const changeText = totalEloChange >= 0 ? `+${totalEloChange}` : `${totalEloChange}`;
+        setValidationMessage(`✅ Validated ${validated} pick${validated > 1 ? 's' : ''}! ELO: ${changeText}`);
+      } else {
+        setValidationMessage('No completed games found yet. Check back later!');
+      }
+      setShowValidationToast(true);
+      setTimeout(() => setShowValidationToast(false), 5000);
+      
+    } catch (error) {
+      console.error('Validation error:', error);
+      setValidationMessage('❌ Error validating picks. Please try again.');
+      setShowValidationToast(true);
+      setTimeout(() => setShowValidationToast(false), 3000);
+    }
+    
+    setValidating(false);
+  };
+
   const filteredPredictions = predictions.filter(p => {
     if (filter === 'pending') return p.result === 'pending' && !p.is_locked;
     if (filter === 'locked') return p.is_locked;
@@ -96,11 +169,38 @@ function Dashboard() {
     elo: profile?.elo || 1000,
     wins: profile?.wins || 0,
     losses: profile?.losses || 0,
-    currentStreak: 0, // TODO: Calculate from picks
-    streakType: 'win',
     rank: getEloRank(profile?.elo || 1000),
-    tier: 'I'
   };
+
+  // Calculate current streak from validated picks
+  const getStreak = () => {
+    const validatedPicks = predictions
+      .filter(p => p.result === 'win' || p.result === 'loss')
+      .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    
+    if (validatedPicks.length === 0) return { count: 0, type: 'none' };
+    
+    const firstResult = validatedPicks[0].result;
+    let count = 0;
+    
+    for (const pick of validatedPicks) {
+      if (pick.result === firstResult) {
+        count++;
+      } else {
+        break;
+      }
+    }
+    
+    return { count, type: firstResult };
+  };
+
+  const streak = getStreak();
+
+  // Get recent validated results
+  const recentResults = predictions
+    .filter(p => p.result === 'win' || p.result === 'loss' || p.result === 'push')
+    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+    .slice(0, 5);
 
   // Helper to determine rank based on ELO
   function getEloRank(elo) {
@@ -152,7 +252,6 @@ function Dashboard() {
           <div className="elo-display">
             <div className="elo-label">ELO Rating</div>
             <div className="elo-value">{userData.elo}</div>
-            <div className="elo-change">+24 today</div>
           </div>
 
           <div className="stats-grid">
@@ -166,13 +265,15 @@ function Dashboard() {
             </div>
 
             <div className="stat-card">
-              <div className="stat-icon">{userData.streakType === 'win' ? '🔥' : '❄️'}</div>
+              <div className="stat-icon">{streak.type === 'win' ? '🔥' : streak.type === 'loss' ? '❄️' : '🎯'}</div>
               <div className="stat-content">
                 <div className="stat-label">Current Streak</div>
-                <div className={`stat-value ${userData.streakType === 'win' ? 'streak-win' : 'streak-loss'}`}>
-                  {userData.currentStreak} {userData.streakType === 'win' ? 'Wins' : 'Losses'}
+                <div className={`stat-value ${streak.type === 'win' ? 'streak-win' : streak.type === 'loss' ? 'streak-loss' : ''}`}>
+                  {streak.count > 0 ? `${streak.count} ${streak.type === 'win' ? 'Win' : 'Loss'}${streak.count > 1 ? 's' : ''}` : 'No streak'}
                 </div>
-                <div className="stat-subtext">{userData.streakType === 'win' ? 'Keep it going!' : 'Bounce back!'}</div>
+                <div className="stat-subtext">
+                  {streak.type === 'win' ? 'Keep it going!' : streak.type === 'loss' ? 'Bounce back!' : 'Start predicting!'}
+                </div>
               </div>
             </div>
 
@@ -183,7 +284,6 @@ function Dashboard() {
                   <div className="rank-name" style={{ color: getRankColor(userData.rank) }}>
                     {userData.rank}
                   </div>
-                  <div className="rank-tier">{userData.tier}</div>
                 </div>
               </div>
             </div>
@@ -196,9 +296,21 @@ function Dashboard() {
           <div className="dashboard-section active-picks-section">
             <div className="section-header">
               <h2 className="section-title">Active Picks</h2>
-              <span className="section-badge">
-                {pendingCount} pending, {lockedCount} locked
-              </span>
+              <div className="section-header-right">
+                <span className="section-badge">
+                  {pendingCount} pending, {lockedCount} locked
+                </span>
+                {lockedCount > 0 && (
+                  <button 
+                    className={`validate-btn ${validating ? 'validating' : ''}`}
+                    onClick={handleValidateResults}
+                    disabled={validating}
+                    title="Check results for locked picks"
+                  >
+                    {validating ? '⏳ Validating...' : '✓ Validate Results'}
+                  </button>
+                )}
+              </div>
             </div>
 
             <div className="filter-tabs">
@@ -284,7 +396,13 @@ function Dashboard() {
                       </div>
 
                       <div className="prediction-footer">
-                        {isLocked ? (
+                        {pred.result === 'win' ? (
+                          <span className="status-badge win">✅ WIN</span>
+                        ) : pred.result === 'loss' ? (
+                          <span className="status-badge loss">❌ LOSS</span>
+                        ) : pred.result === 'push' ? (
+                          <span className="status-badge push">➖ PUSH</span>
+                        ) : isLocked ? (
                           <span className="status-badge locked">🔒 LOCKED</span>
                         ) : (
                           <>
@@ -309,29 +427,54 @@ function Dashboard() {
             <div className="section-header">
               <h2 className="section-title">Quick Actions</h2>
             </div>
-            <div className="section-placeholder-box">
-              <p>Quick Actions content coming soon...</p>
+            <div className="quick-actions-grid">
+              <button className="quick-action-btn" onClick={() => router.push('/predictions')}>
+                <span className="quick-action-icon">🏀</span>
+                <span className="quick-action-text">Make Predictions</span>
+              </button>
+              <button className="quick-action-btn" onClick={() => router.push('/overview')}>
+                <span className="quick-action-icon">📖</span>
+                <span className="quick-action-text">How to Play</span>
+              </button>
+              <button className="quick-action-btn" onClick={() => router.push('/profile')}>
+                <span className="quick-action-icon">👤</span>
+                <span className="quick-action-text">View Profile</span>
+              </button>
+              <button className="quick-action-btn" onClick={() => router.push('/rating')}>
+                <span className="quick-action-icon">🏆</span>
+                <span className="quick-action-text">Leaderboard</span>
+              </button>
             </div>
-          </div>
-        </div>
-
-        <div className="dashboard-section friends-section">
-          <div className="section-header">
-            <h2 className="section-title">Friends Leaderboard</h2>
-            <span className="section-badge">12 friends</span>
-          </div>
-          <div className="section-placeholder-box">
-            <p>Friends Leaderboard content coming soon...</p>
           </div>
         </div>
 
         <div className="dashboard-section recent-results-section">
           <div className="section-header">
             <h2 className="section-title">Recent Results</h2>
+            <span className="section-badge">{recentResults.length} validated</span>
           </div>
-          <div className="section-placeholder-box">
-            <p>Recent Results content coming soon...</p>
-          </div>
+          {recentResults.length === 0 ? (
+            <div className="empty-state small">
+              <p>No validated picks yet. Lock your picks and validate them after games end!</p>
+            </div>
+          ) : (
+            <div className="recent-results-list">
+              {recentResults.map(pick => (
+                <div key={pick.id} className={`recent-result-item ${pick.result}`}>
+                  <div className="result-teams">
+                    {pick.away_team} @ {pick.home_team}
+                  </div>
+                  <div className="result-pick-info">
+                    <span className="result-pick-type">{pick.pick_type}</span>
+                    <span className="result-pick-value">{pick.pick_value}</span>
+                  </div>
+                  <div className={`result-badge ${pick.result}`}>
+                    {pick.result === 'win' ? '✅ WIN' : pick.result === 'loss' ? '❌ LOSS' : '➖ PUSH'}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
@@ -349,6 +492,46 @@ function Dashboard() {
                 Cancel
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Validation Toast */}
+      {showValidationToast && (
+        <div className="validation-toast">
+          {validationMessage}
+        </div>
+      )}
+
+      {/* Validation Results Summary */}
+      {validationResults.length > 0 && (
+        <div className="validation-results-overlay" onClick={() => setValidationResults([])}>
+          <div className="validation-results-modal" onClick={(e) => e.stopPropagation()}>
+            <h3>📊 Validation Results</h3>
+            <div className="validation-results-list">
+              {validationResults.map((r, idx) => (
+                <div key={idx} className={`validation-result-item ${r.result}`}>
+                  <div className="result-game">
+                    {r.pick.away_team} @ {r.pick.home_team}
+                  </div>
+                  <div className="result-score">
+                    Final: {r.awayScore} - {r.homeScore}
+                  </div>
+                  <div className="result-pick">
+                    Your pick: {r.pick.pick_value}
+                  </div>
+                  <div className={`result-outcome ${r.result}`}>
+                    {r.result === 'win' ? '✅ WIN' : r.result === 'loss' ? '❌ LOSS' : '➖ PUSH'}
+                    <span className="elo-change">
+                      {r.eloChange > 0 ? `+${r.eloChange}` : r.eloChange} ELO
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <button className="close-results-btn" onClick={() => setValidationResults([])}>
+              Close
+            </button>
           </div>
         </div>
       )}

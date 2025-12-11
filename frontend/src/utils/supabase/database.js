@@ -87,6 +87,60 @@ export async function updateUserProfile(updates) {
   return { data };
 }
 
+// ============ ELO CALCULATION ============
+
+/**
+ * Calculate ELO change based on result and odds
+ * 
+ * Base change: 25 points
+ * - Wins with underdog odds (positive): bonus points
+ * - Wins with favorite odds (negative): fewer bonus points
+ * - Losses are penalized less for risky picks
+ * 
+ * @param {number} currentElo - User's current ELO rating
+ * @param {boolean} isWin - Whether the pick was correct
+ * @param {number} odds - American odds for the pick (e.g., +150, -110)
+ * @returns {Object} { newElo, change }
+ */
+export function calculateEloChange(currentElo, isWin, odds) {
+  const BASE_CHANGE = 25;
+  
+  // Convert American odds to implied probability
+  // Positive odds: probability = 100 / (odds + 100)
+  // Negative odds: probability = |odds| / (|odds| + 100)
+  let impliedProbability;
+  if (odds > 0) {
+    impliedProbability = 100 / (odds + 100);
+  } else {
+    impliedProbability = Math.abs(odds) / (Math.abs(odds) + 100);
+  }
+  
+  // Risk multiplier: higher for underdogs, lower for favorites
+  // Underdog (low probability): multiplier > 1
+  // Favorite (high probability): multiplier < 1
+  const riskMultiplier = 1 + (0.5 - impliedProbability);
+  
+  let change;
+  
+  if (isWin) {
+    // Wins: Base points * risk multiplier
+    // Underdog wins reward more, favorite wins reward less
+    change = Math.round(BASE_CHANGE * riskMultiplier);
+    // Minimum win: +10, Maximum win: +50
+    change = Math.max(10, Math.min(50, change));
+  } else {
+    // Losses: Base penalty, reduced for risky picks
+    // Risky picks (underdogs) lose fewer points
+    change = -Math.round(BASE_CHANGE * (1 - (riskMultiplier - 1) * 0.5));
+    // Minimum loss: -10, Maximum loss: -30
+    change = Math.max(-30, Math.min(-10, change));
+  }
+  
+  const newElo = Math.max(0, currentElo + change); // ELO can't go below 0
+  
+  return { newElo, change };
+}
+
 // ============ PICKS FUNCTIONS ============
 
 /**
@@ -238,27 +292,123 @@ export async function deletePick(pickId) {
 }
 
 /**
- * Update pick result (win/loss)
+ * Validate a pick and update user's ELO, wins, and losses
+ * This is the main function called when validating results
+ * 
+ * @param {number} pickId - The pick ID to validate
+ * @param {string} result - 'win', 'loss', or 'push'
+ * @returns {Object} { pick, profile, eloChange } or { error }
  */
-export async function updatePickResult(pickId, result) {
+export async function validateAndUpdatePick(pickId, result) {
   const supabase = createClient();
   const { data: { user } } = await supabase.auth.getUser();
   
   if (!user) return { error: 'Not authenticated' };
   
-  const { data, error } = await supabase
+  // Get the pick to get the odds
+  const { data: pick, error: pickError } = await supabase
     .from('picks')
-    .update({ result })
+    .select('*')
     .eq('id', pickId)
     .eq('user_id', user.id)
+    .single();
+  
+  if (pickError || !pick) {
+    return { error: 'Pick not found' };
+  }
+  
+  // Don't re-validate already validated picks
+  if (pick.result !== 'pending') {
+    return { error: 'Pick already validated', pick };
+  }
+  
+  // Handle push (tie) - no ELO change
+  if (result === 'push') {
+    const { data: updatedPick } = await supabase
+      .from('picks')
+      .update({ result: 'push' })
+      .eq('id', pickId)
+      .select()
+      .single();
+    
+    const profile = await getUserProfile();
+    return { pick: updatedPick, profile, eloChange: 0 };
+  }
+  
+  // Get current profile for ELO calculation
+  const profile = await getUserProfile();
+  if (!profile) {
+    return { error: 'Profile not found' };
+  }
+  
+  // Calculate ELO change
+  const isWin = result === 'win';
+  const { newElo, change } = calculateEloChange(profile.elo, isWin, pick.odds);
+  
+  // Update pick result
+  const { error: updatePickError } = await supabase
+    .from('picks')
+    .update({ result })
+    .eq('id', pickId);
+  
+  if (updatePickError) {
+    return { error: 'Failed to update pick result' };
+  }
+  
+  // Update profile (ELO and win/loss count)
+  const profileUpdates = {
+    elo: newElo,
+    wins: isWin ? profile.wins + 1 : profile.wins,
+    losses: !isWin ? profile.losses + 1 : profile.losses
+  };
+  
+  const { data: updatedProfile, error: profileError } = await supabase
+    .from('profiles')
+    .update(profileUpdates)
+    .eq('id', user.id)
     .select()
     .single();
   
-  if (error) {
-    console.error('Error updating pick result:', error);
-    return { error };
+  if (profileError) {
+    return { error: 'Failed to update profile' };
   }
-  return { data };
+  
+  // Get updated pick
+  const { data: finalPick } = await supabase
+    .from('picks')
+    .select('*')
+    .eq('id', pickId)
+    .single();
+  
+  return { 
+    pick: finalPick, 
+    profile: updatedProfile, 
+    eloChange: change 
+  };
+}
+
+/**
+ * Get all locked picks that are pending validation (game should be over)
+ */
+export async function getPicksToValidate() {
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  
+  if (!user) return [];
+  
+  const { data, error } = await supabase
+    .from('picks')
+    .select('*')
+    .eq('user_id', user.id)
+    .eq('is_locked', true)
+    .eq('result', 'pending')
+    .order('game_date', { ascending: true });
+  
+  if (error) {
+    console.error('Error fetching picks to validate:', error);
+    return [];
+  }
+  return data;
 }
 
 /**
