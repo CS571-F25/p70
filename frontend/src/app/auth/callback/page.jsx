@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
+import { getOrCreateProfile } from '@/utils/supabase/database';
 
 export default function AuthCallbackPage() {
   const router = useRouter();
@@ -17,6 +18,8 @@ export default function AuthCallbackPage() {
       if (code) {
         const { error } = await supabase.auth.exchangeCodeForSession(code);
         if (!error) {
+          // Create profile if it doesn't exist
+          await getOrCreateProfile();
           router.push(next);
         } else {
           console.error('Auth error:', error);
@@ -26,6 +29,8 @@ export default function AuthCallbackPage() {
         // If no code, check if we have a session anyway
         const { data: { session } } = await supabase.auth.getSession();
         if (session) {
+            // Create profile if it doesn't exist
+            await getOrCreateProfile();
             router.push(next);
         } else {
             router.push('/login');

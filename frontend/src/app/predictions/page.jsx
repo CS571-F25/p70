@@ -2,25 +2,53 @@
 
 import { useState, useEffect } from 'react';
 import { oddsApi } from '../../services/oddsApi';
+import { createClient } from '../../utils/supabase/client';
 import { 
-  savePrediction, 
-  getPendingPredictions,
-  getLockedPredictions,
-  hasPrediction,
-  getPrediction
-} from '../../utils/predictionStorage';
+  savePick, 
+  getPendingPicks,
+  getLockedPicks,
+  hasPick,
+  getPick,
+  getOrCreateProfile
+} from '../../utils/supabase/database';
 import './Predictions.css';
 
 function Predictions() {
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [user, setUser] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true);
   
   // Interactive prediction state
   const [selectedPrediction, setSelectedPrediction] = useState(null);
   const [confirmedPredictions, setConfirmedPredictions] = useState([]);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
+
+  // Check auth state
+  useEffect(() => {
+    const supabase = createClient();
+    
+    async function checkAuth() {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+      setAuthLoading(false);
+      
+      if (user) {
+        // Ensure profile exists
+        await getOrCreateProfile();
+      }
+    }
+    
+    checkAuth();
+    
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      setUser(session?.user ?? null);
+    });
+    
+    return () => subscription.unsubscribe();
+  }, []);
 
   useEffect(() => {
     async function fetchGames() {
@@ -40,18 +68,21 @@ function Predictions() {
     fetchGames();
   }, []);
 
-  // Load confirmed predictions from localStorage on mount
+  // Load confirmed predictions from database on mount
   useEffect(() => {
-    const loadPredictions = () => {
-      const pending = getPendingPredictions();
-      const locked = getLockedPredictions();
+    async function loadPredictions() {
+      if (!user) {
+        setConfirmedPredictions([]);
+        return;
+      }
+      
+      const pending = await getPendingPicks();
+      const locked = await getLockedPicks();
       setConfirmedPredictions([...pending, ...locked]);
-    };
+    }
     
     loadPredictions();
-    window.addEventListener('focus', loadPredictions);
-    return () => window.removeEventListener('focus', loadPredictions);
-  }, []);
+  }, [user]);
 
   // Show toast notification
   const displayToast = (message) => {
@@ -61,7 +92,13 @@ function Predictions() {
   };
 
   // Handle odds click - select prediction
-  const handleOddsClick = (game, betType, outcome, odds, point = null) => {
+  const handleOddsClick = async (game, betType, outcome, odds, point = null) => {
+    // Check if user is logged in
+    if (!user) {
+      displayToast('🔐 Please log in to make predictions!');
+      return;
+    }
+
     const gameTime = new Date(game.commence_time);
     const now = new Date();
     
@@ -72,9 +109,10 @@ function Predictions() {
     }
 
     // Validation: Check for duplicate predictions
-    if (hasPrediction(game.id, betType)) {
-      const existingPred = getPrediction(game.id, betType);
-      if (existingPred && existingPred.status === 'locked') {
+    const hasExisting = await hasPick(game.id, betType);
+    if (hasExisting) {
+      const existingPred = await getPick(game.id, betType);
+      if (existingPred && existingPred.is_locked) {
         displayToast('🔒 You already have a LOCKED prediction for this game!');
       } else {
         displayToast('⚠️ You already have a prediction for this bet type!');
@@ -98,11 +136,30 @@ function Predictions() {
   };
 
   // Confirm and save prediction
-  const handleConfirmPrediction = () => {
+  const handleConfirmPrediction = async () => {
     if (!selectedPrediction) return;
+    if (!user) {
+      displayToast('🔐 Please log in to make predictions!');
+      return;
+    }
 
     try {
-      const saved = savePrediction(selectedPrediction);
+      const { data: saved, error } = await savePick({
+        gameId: selectedPrediction.eventId,
+        homeTeam: selectedPrediction.homeTeam,
+        awayTeam: selectedPrediction.awayTeam,
+        pickType: selectedPrediction.betType,
+        pickValue: selectedPrediction.selection,
+        odds: selectedPrediction.odds,
+        gameDate: selectedPrediction.commenceTime,
+      });
+      
+      if (error) {
+        displayToast('❌ Failed to save prediction');
+        console.error(error);
+        return;
+      }
+      
       setConfirmedPredictions([...confirmedPredictions, saved]);
       displayToast('✅ Prediction saved successfully!');
       setSelectedPrediction(null);
@@ -130,7 +187,7 @@ function Predictions() {
   // Check if odds button is already confirmed/locked
   const isLocked = (gameId, betType) => {
     return confirmedPredictions.some(
-      pred => pred.eventId === gameId && pred.betType === betType
+      pred => pred.game_id === gameId && pred.pick_type === betType
     );
   };
 
@@ -154,7 +211,7 @@ function Predictions() {
     return market ? market.outcomes : null;
   };
 
-  if (loading) {
+  if (loading || authLoading) {
     return (
       <div className="predictions-page">
         <div className="loading-container">
@@ -196,7 +253,12 @@ function Predictions() {
         <h1 className="page-title">🏀 NBA Predictions</h1>
         <div className="header-info">
           <p className="games-count">{games.length} Games Available</p>
-          {confirmedPredictions.length > 0 && (
+          {!user && (
+            <span className="login-prompt">
+              <a href="/login">Log in</a> to save predictions
+            </span>
+          )}
+          {user && confirmedPredictions.length > 0 && (
             <span className="predictions-badge">
               {confirmedPredictions.length} Active Pick{confirmedPredictions.length !== 1 ? 's' : ''}
             </span>

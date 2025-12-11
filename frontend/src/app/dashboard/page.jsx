@@ -3,16 +3,24 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
-import { getPendingPredictions, getLockedPredictions, deletePrediction, lockPrediction } from '../../utils/predictionStorage';
+import { 
+  getUserPicks, 
+  deletePick, 
+  lockPick,
+  getUserProfile,
+  getOrCreateProfile
+} from '../../utils/supabase/database';
 import './Dashboard.css';
 
 function Dashboard() {
   const router = useRouter();
   const supabase = createClient();
   const [user, setUser] = useState(null);
+  const [profile, setProfile] = useState(null);
   const [predictions, setPredictions] = useState([]);
   const [filter, setFilter] = useState('all');
   const [showConfirm, setShowConfirm] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const getUser = async () => {
@@ -21,12 +29,15 @@ function Dashboard() {
         router.push('/login');
       } else {
         setUser(user);
+        // Load profile from database
+        const userProfile = await getOrCreateProfile();
+        setProfile(userProfile);
+        // Load predictions from database
+        await loadPredictions();
       }
+      setLoading(false);
     };
     getUser();
-    loadPredictions();
-    window.addEventListener('focus', loadPredictions);
-    return () => window.removeEventListener('focus', loadPredictions);
   }, [router, supabase]);
 
   const handleLogout = async () => {
@@ -35,21 +46,22 @@ function Dashboard() {
     router.refresh();
   };
 
-  const loadPredictions = () => {
-    const pending = getPendingPredictions();
-    const locked = getLockedPredictions();
-    setPredictions([...locked, ...pending]);
+  const loadPredictions = async () => {
+    const picks = await getUserPicks();
+    setPredictions(picks);
   };
 
-  const handleDeletePrediction = (predictionId, isLocked) => {
+  const handleDeletePrediction = async (predictionId, isLocked) => {
     if (isLocked) {
       if (window.confirm('This is a locked prediction. Deleting will forfeit potential ELO gains. Are you sure?')) {
-        deletePrediction(predictionId);
-        loadPredictions();
+        // Note: locked picks cannot be deleted via database rules
+        // But we show the warning anyway
+        await deletePick(predictionId);
+        await loadPredictions();
       }
     } else {
-      deletePrediction(predictionId);
-      loadPredictions();
+      await deletePick(predictionId);
+      await loadPredictions();
     }
   };
 
@@ -57,10 +69,10 @@ function Dashboard() {
     setShowConfirm(predictionId);
   };
 
-  const confirmLock = () => {
+  const confirmLock = async () => {
     if (showConfirm) {
-      lockPrediction(showConfirm);
-      loadPredictions();
+      await lockPick(showConfirm);
+      await loadPredictions();
       setShowConfirm(null);
     }
   };
@@ -70,24 +82,36 @@ function Dashboard() {
   };
 
   const filteredPredictions = predictions.filter(p => {
-    if (filter === 'pending') return p.status === 'pending';
-    if (filter === 'locked') return p.status === 'locked';
+    if (filter === 'pending') return p.result === 'pending' && !p.is_locked;
+    if (filter === 'locked') return p.is_locked;
     return true;
   });
 
-  const pendingCount = predictions.filter(p => p.status === 'pending').length;
-  const lockedCount = predictions.filter(p => p.status === 'locked').length;
+  const pendingCount = predictions.filter(p => p.result === 'pending' && !p.is_locked).length;
+  const lockedCount = predictions.filter(p => p.is_locked).length;
 
-  const [userData] = useState({
+  // Use profile data from database
+  const userData = {
     username: user?.email?.split('@')[0] || 'PlayMaker',
-    elo: 1847,
-    wins: 42,
-    losses: 18,
-    currentStreak: 5,
+    elo: profile?.elo || 1000,
+    wins: profile?.wins || 0,
+    losses: profile?.losses || 0,
+    currentStreak: 0, // TODO: Calculate from picks
     streakType: 'win',
-    rank: 'Diamond',
-    tier: 'III'
-  });
+    rank: getEloRank(profile?.elo || 1000),
+    tier: 'I'
+  };
+
+  // Helper to determine rank based on ELO
+  function getEloRank(elo) {
+    if (elo >= 2400) return 'Grandmaster';
+    if (elo >= 2100) return 'Master';
+    if (elo >= 1800) return 'Diamond';
+    if (elo >= 1500) return 'Platinum';
+    if (elo >= 1200) return 'Gold';
+    if (elo >= 900) return 'Silver';
+    return 'Bronze';
+  }
 
   const totalGames = userData.wins + userData.losses;
   const winRate = totalGames > 0 ? ((userData.wins / totalGames) * 100).toFixed(1) : 0;
@@ -104,6 +128,16 @@ function Dashboard() {
     };
     return rankColors[rank] || '#3B82F6';
   };
+
+  if (loading) {
+    return (
+      <div className="dashboard-page">
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
+          <div className="loading-spinner"></div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="dashboard-page">
@@ -200,9 +234,9 @@ function Dashboard() {
             ) : (
               <div className="predictions-grid">
                 {filteredPredictions.map(pred => {
-                  const gameTime = new Date(pred.commenceTime);
+                  const gameTime = new Date(pred.game_date);
                   const isToday = gameTime.toDateString() === new Date().toDateString();
-                  const isLocked = pred.status === 'locked';
+                  const isLocked = pred.is_locked;
                   
                   return (
                     <div key={pred.id} className={`prediction-card ${isLocked ? 'locked' : ''}`}>
@@ -224,27 +258,26 @@ function Dashboard() {
 
                       <div className="teams-section">
                         <div className="team">
-                          <span className="team-name">{pred.awayTeam}</span>
+                          <span className="team-name">{pred.away_team}</span>
                           <span className="team-label">AWAY</span>
                         </div>
                         <div className="vs-divider">@</div>
                         <div className="team">
-                          <span className="team-name">{pred.homeTeam}</span>
+                          <span className="team-name">{pred.home_team}</span>
                           <span className="team-label">HOME</span>
                         </div>
                       </div>
 
                       <div className="bet-details">
-                        <div className={`bet-type-badge ${pred.betType}`}>
-                          {pred.betType === 'moneyline' ? 'Moneyline' : 
-                           pred.betType === 'spread' ? 'Spread' : 'Total Points'}
+                        <div className={`bet-type-badge ${pred.pick_type}`}>
+                          {pred.pick_type === 'moneyline' ? 'Moneyline' : 
+                           pred.pick_type === 'spread' ? 'Spread' : 'Total Points'}
                         </div>
                         
                         <div className="your-pick">
                           <span className="pick-label">Your Pick:</span>
                           <span className="pick-value">
-                            {pred.selection}
-                            {pred.point && ` (${pred.point > 0 ? '+' : ''}${pred.point})`}
+                            {pred.pick_value}
                             {' '}@ {pred.odds > 0 ? '+' : ''}{pred.odds}
                           </span>
                         </div>
