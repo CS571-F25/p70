@@ -154,14 +154,19 @@ function Dashboard() {
     setValidating(false);
   };
 
+  // Exclude validated wins from the Active Picks area
   const filteredPredictions = predictions.filter(p => {
+    // Always exclude already-won picks from active lists
+    if (p.result === 'win') return false;
+
     if (filter === 'pending') return p.result === 'pending' && !p.is_locked;
-    if (filter === 'locked') return p.is_locked;
+    if (filter === 'locked') return p.is_locked && p.result !== 'win';
     return true;
   });
 
   const pendingCount = predictions.filter(p => p.result === 'pending' && !p.is_locked).length;
-  const lockedCount = predictions.filter(p => p.is_locked).length;
+  const lockedCount = predictions.filter(p => p.is_locked && p.result !== 'win').length;
+  const activeCount = predictions.filter(p => p.result !== 'win').length;
 
   // Use profile data from database
   const userData = {
@@ -318,7 +323,7 @@ function Dashboard() {
                 className={`filter-tab ${filter === 'all' ? 'active' : ''}`}
                 onClick={() => setFilter('all')}
               >
-                All ({predictions.length})
+                All ({activeCount})
               </button>
               <button 
                 className={`filter-tab ${filter === 'pending' ? 'active' : ''}`}

@@ -120,13 +120,24 @@ function Predictions() {
       return;
     }
 
+    // Format selection value so spreads/totals include the line number
+    let selectionValue = outcome;
+    if (betType === 'spread') {
+      // outcome is team name, point is the spread value (e.g. -5.5)
+      const pointStr = (point > 0 ? '+' : '') + point; // preserves sign for negatives
+      selectionValue = `${outcome} ${pointStr}`;
+    } else if (betType === 'total' || betType === 'totals') {
+      // outcome is usually 'Over' or 'Under', point is the line (e.g. 220.5)
+      selectionValue = `${outcome} ${point}`;
+    }
+
     // Create prediction object
     const prediction = {
       eventId: game.id,
       homeTeam: game.home_team,
       awayTeam: game.away_team,
       betType,
-      selection: outcome,
+      selection: selectionValue,
       odds,
       point,
       commenceTime: game.commence_time,
@@ -372,7 +383,9 @@ function Predictions() {
                     <h4 className="market-title">Spread</h4>
                     <div className="odds-grid">
                       {spreads.map(outcome => {
-                        const selected = isSelected(game.id, 'spread', outcome.name);
+                        const pointStr = (outcome.point > 0 ? '+' : '') + outcome.point;
+                        const selectionStr = `${outcome.name} ${pointStr}`;
+                        const selected = isSelected(game.id, 'spread', selectionStr);
                         const locked = isLocked(game.id, 'spread');
                         const disabled = gameStarted || (locked && !selected);
                         
@@ -401,7 +414,8 @@ function Predictions() {
                     <h4 className="market-title">Total Points</h4>
                     <div className="odds-grid">
                       {totals.map(outcome => {
-                        const selected = isSelected(game.id, 'total', outcome.name);
+                        const selectionStr = `${outcome.name} ${outcome.point}`;
+                        const selected = isSelected(game.id, 'total', selectionStr);
                         const locked = isLocked(game.id, 'total');
                         const disabled = gameStarted || (locked && !selected);
                         
