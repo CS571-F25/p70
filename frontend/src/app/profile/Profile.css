@@ -101,7 +101,7 @@
 }
 
 .profile-email {
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.75);
   font-size: 0.9rem;
   margin: 0;
 }
@@ -116,7 +116,7 @@
 .edit-btn {
   background: transparent;
   border: none;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.75);
   cursor: pointer;
   font-size: 0.9rem;
   padding: 4px 8px;
@@ -239,7 +239,7 @@
 }
 
 .stat-label {
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.75);
   font-size: 0.85rem;
 }
 
@@ -284,7 +284,7 @@
   justify-content: space-between;
   margin-bottom: 8px;
   font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .elo-tiers span.active {
@@ -405,7 +405,7 @@
 }
 
 .info-label {
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.75);
   font-size: 0.9rem;
 }
 
@@ -415,7 +415,7 @@
 
 .info-value.user-id {
   font-family: monospace;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.7);
   font-size: 0.85rem;
 }
 

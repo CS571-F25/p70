@@ -57,7 +57,7 @@
 
 .overview-subtitle {
   font-size: 1.1rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.75);
   margin: 0;
   max-width: 500px;
   margin-left: auto;
@@ -131,7 +131,7 @@
 
 .section-subtitle {
   font-size: 1rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.75);
   text-align: center;
   margin: 0 0 2rem 0;
 }
@@ -316,7 +316,7 @@
 
 .play-description {
   font-size: 0.95rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.75);
   line-height: 1.5;
   margin: 0;
 }
@@ -382,7 +382,7 @@
 
 .glossary-definition {
   font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.75);
   line-height: 1.6;
   margin: 0;
 }

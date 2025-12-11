@@ -37,15 +37,15 @@ function Navbar() {
   const isActive = (path) => pathname === path;
 
   return (
-    <nav className="navbar">
+    <nav className="navbar" role="navigation" aria-label="Main navigation">
       <div className="navbar-container">
-        <span 
-          className="brand-wordmark" 
-          onClick={() => router.push('/')}
-          style={{ cursor: 'pointer' }}
+        <Link 
+          href="/"
+          className="brand-wordmark"
+          aria-label="PlayMaker - Go to homepage"
         >
           PlayMaker
-        </span>
+        </Link>
         <ul className="navbar-links">
           <li>
             <Link 

@@ -15,8 +15,11 @@ export default function RootLayout({ children }) {
         <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
       </head>
       <body>
+        <a href="#main-content" className="skip-link">Skip to main content</a>
         <Navbar />
-        {children}
+        <main id="main-content">
+          {children}
+        </main>
       </body>
     </html>
   );

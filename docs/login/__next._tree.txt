@@ -1,4 +1,4 @@
-:HL["/p70/_next/static/chunks/852b4f52f54a1359.css","style"]
-:HL["/p70/_next/static/chunks/dabbd3b07cdfd743.css","style"]
+:HL["/p70/_next/static/chunks/f564dcf80cd17f66.css","style"]
+:HL["/p70/_next/static/chunks/8afc7442a3730980.css","style"]
 :HL["https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap","style"]
-0:{"buildId":"Zn8wh-cnPux_yNA_xlFjE","tree":{"name":"","paramType":null,"paramKey":"","hasRuntimePrefetch":false,"slots":{"children":{"name":"login","paramType":null,"paramKey":"login","hasRuntimePrefetch":false,"slots":{"children":{"name":"__PAGE__","paramType":null,"paramKey":"__PAGE__","hasRuntimePrefetch":false,"slots":null,"isRootLayout":false}},"isRootLayout":false}},"isRootLayout":true},"staleTime":300}
+0:{"buildId":"0EbTTXOdu9yricxB0seBn","tree":{"name":"","paramType":null,"paramKey":"","hasRuntimePrefetch":false,"slots":{"children":{"name":"login","paramType":null,"paramKey":"login","hasRuntimePrefetch":false,"slots":{"children":{"name":"__PAGE__","paramType":null,"paramKey":"__PAGE__","hasRuntimePrefetch":false,"slots":null,"isRootLayout":false}},"isRootLayout":false}},"isRootLayout":true},"staleTime":300}
