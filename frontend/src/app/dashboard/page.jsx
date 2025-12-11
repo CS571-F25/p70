@@ -352,13 +352,15 @@ function Dashboard() {
                   
                   return (
                     <div key={pred.id} className={`prediction-card ${isLocked ? 'locked' : ''}`}>
-                      <button 
-                        className="delete-btn" 
-                        onClick={() => handleDeletePrediction(pred.id, isLocked)}
-                        title={isLocked ? "Delete locked prediction" : "Cancel prediction"}
-                      >
-                        ✕
-                      </button>
+                      {!isLocked && (
+                        <button 
+                          className="delete-btn" 
+                          onClick={() => handleDeletePrediction(pred.id, isLocked)}
+                          title="Cancel prediction"
+                        >
+                          ✕
+                        </button>
+                      )}
                       
                       <div className="game-header">
                         <div className="game-time">
