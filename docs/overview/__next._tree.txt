@@ -1,4 +1,4 @@
 :HL["/p70/_next/static/chunks/f564dcf80cd17f66.css","style"]
 :HL["/p70/_next/static/chunks/fa50d83750dfc786.css","style"]
 :HL["https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap","style"]
-0:{"buildId":"0EbTTXOdu9yricxB0seBn","tree":{"name":"","paramType":null,"paramKey":"","hasRuntimePrefetch":false,"slots":{"children":{"name":"overview","paramType":null,"paramKey":"overview","hasRuntimePrefetch":false,"slots":{"children":{"name":"__PAGE__","paramType":null,"paramKey":"__PAGE__","hasRuntimePrefetch":false,"slots":null,"isRootLayout":false}},"isRootLayout":false}},"isRootLayout":true},"staleTime":300}
+0:{"buildId":"TSUMXFceTL58IbxIkVCK5","tree":{"name":"","paramType":null,"paramKey":"","hasRuntimePrefetch":false,"slots":{"children":{"name":"overview","paramType":null,"paramKey":"overview","hasRuntimePrefetch":false,"slots":{"children":{"name":"__PAGE__","paramType":null,"paramKey":"__PAGE__","hasRuntimePrefetch":false,"slots":null,"isRootLayout":false}},"isRootLayout":false}},"isRootLayout":true},"staleTime":300}
